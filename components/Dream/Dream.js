@@ -36,17 +36,11 @@ export default function Dream() {
         <div className={styles.villageLayout}>
           {dreamPoints.filter((point) => point.side === "left").map((point) => <DreamPoint key={point.title} point={point} />)}
           <div className={styles.feature}>
-            <video
+            <img
               className={styles.featureVideo}
-              autoPlay
-              loop
-              muted
-              playsInline
-              poster="/BATCH.jpg"
-              aria-label="Community members celebrating in a village"
-            >
-              <source src="/TP.mp4" type="video/mp4" />
-            </video>
+              src="/Main img.jpeg"
+              alt="Community members celebrating in a village"
+            />
             <p>250+ Swades Dream<br />Villages Celebrated</p>
           </div>
           {dreamPoints.filter((point) => point.side === "right").map((point) => <DreamPoint key={point.title} point={point} />)}

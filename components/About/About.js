@@ -5,9 +5,11 @@ export default function About() {
     <section className={styles.section} id="get-involved">
       <div className={`container ${styles.layout}`}>
         <div className={styles.mediaPanel}>
-          <video className={styles.media} autoPlay muted loop playsInline>
-            <source src="/TP.mp4" type="video/mp4" />
-          </video>
+          <img
+            className={styles.media}
+            src="/Main img.jpeg"
+            alt="Aai Remai Devi Foundation community gathering"
+          />
           <div className={styles.mediaShade} />
           <div className={styles.mediaContent}>
             <span className={styles.mediaEyebrow}>आई रेमाई देवी</span>
