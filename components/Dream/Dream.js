@@ -6,6 +6,7 @@ import {
   Sprout,
   Waves,
 } from "lucide-react";
+import Image from "next/image";
 import styles from "./Dream.module.css";
 
 const dreamPoints = [
@@ -36,18 +37,13 @@ export default function Dream() {
         <div className={styles.villageLayout}>
           {dreamPoints.filter((point) => point.side === "left").map((point) => <DreamPoint key={point.title} point={point} />)}
           <div className={styles.feature}>
-            <video
-              className={styles.featureVideo}
-              autoPlay
-              loop
-              muted
-              playsInline
-              poster="/BATCH.jpg"
-              aria-label="Community members celebrating in a village"
-            >
-              <source src="/TP.mp4" type="video/mp4" />
-            </video>
-            <p>250+ Swades Dream<br />Villages Celebrated</p>
+            <Image
+              src="/Village.jpeg"
+              alt="Community members celebrating in a dream village"
+              width={1024}
+              height={1024}
+              className={styles.featureImage}
+            />
           </div>
           {dreamPoints.filter((point) => point.side === "right").map((point) => <DreamPoint key={point.title} point={point} />)}
         </div>

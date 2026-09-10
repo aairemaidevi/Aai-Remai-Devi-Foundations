@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "आई रेमाई देवी | Aai Remai Devi Foundation",
+  title: "आई रेमाई देवी | Aai Remai Devi Education And Social Foundation",
   description:
     "आई रेमाई देवी — सेवा, संस्कार, समर्पण, विकास. A rural empowerment foundation working across Maharashtra on water, health, education and livelihoods.",
 };

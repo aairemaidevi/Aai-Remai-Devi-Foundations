@@ -1,62 +1,3 @@
-/*!*******************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[3]!./components/BranchDivider.module.css ***!
-  \*******************************************************************************************************************************************************************************************************************************************************************************/
-.BranchDivider_divider__7_e5p {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  width: min(100% - 48px, var(--container));
-  margin: 0 auto;
-  padding: 24px 0;
-  color: var(--maroon);
-}
-
-.BranchDivider_line__47bkf {
-  height: 1px;
-  flex: 1 1;
-  background: currentColor;
-  opacity: 0.3;
-}
-
-.BranchDivider_label__Bs4fb {
-  font-family: var(--font-utility);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-/*!*****************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[3]!./components/Dream/Dream.module.css ***!
-  \*****************************************************************************************************************************************************************************************************************************************************************************/
-.Dream_section__VL3Sp { background: #fff8f2; color: #262626; padding: 42px 24px 28px; }
-.Dream_container__y8FNW { max-width: 1320px; margin: 0 auto; }
-.Dream_title__X_eUR { color: #050505; font-size: clamp(42px, 4vw, 66px); font-weight: 600; letter-spacing: -0.055em; text-align: center; }
-.Dream_subtitle__J9FU3 { max-width: 980px; margin: 8px auto 28px; color: #222; font-family: var(--font-utility); font-size: clamp(14px, 1.25vw, 18px); line-height: 1.35; text-align: center; }
-.Dream_villageLayout__X2jdj { position: relative; display: grid; grid-template-columns: minmax(240px, 1fr) minmax(440px, 640px) minmax(240px, 1fr); grid-template-rows: repeat(3, 1fr); grid-column-gap: 46px; column-gap: 46px; grid-row-gap: 12px; row-gap: 12px; min-height: 450px; align-items: center; }
-.Dream_point__Unfu4 { position: relative; display: flex; align-items: flex-start; gap: 20px; max-width: 300px; font-family: var(--font-utility); }
-.Dream_point__Unfu4.Dream_left__8E6H_ { grid-column: 1; }.Dream_point__Unfu4.Dream_right__HTcq4 { grid-column: 3; }.Dream_point__Unfu4.Dream_top__8cMWN { grid-row: 1; }.Dream_point__Unfu4.Dream_middle__QIxQp { grid-row: 2; }.Dream_point__Unfu4.Dream_bottom__XskDe { grid-row: 3; }
-.Dream_point__Unfu4::after { position: absolute; top: 48px; width: 105px; height: 68px; border-top: 2px dashed rgba(245, 130, 17, 0.48); content: ""; }
-.Dream_point__Unfu4.Dream_left__8E6H_::after { right: -50px; border-radius: 50% 0 0 0; transform: rotate(16deg); }
-.Dream_point__Unfu4.Dream_right__HTcq4::after { left: -50px; border-radius: 0 50% 0 0; transform: rotate(-16deg); }
-.Dream_iconWrap__B9Bpl { flex: 0 0 68px; display: grid; width: 68px; height: 68px; place-items: center; color: #f58211; }
-.Dream_point__Unfu4 h3 { color: #171717; font-family: var(--font-utility); font-size: 16px; font-weight: 700; line-height: 1.2; }.Dream_point__Unfu4 p { margin-top: 8px; color: #656565; font-size: 13px; line-height: 1.55; }
-.Dream_feature__fmuei { position: relative; grid-column: 2; grid-row: 1 / 4; align-self: center; overflow: visible; aspect-ratio: 1.45; border-radius: 20px; background: #ddd; }.Dream_featureVideo__rVpTe { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }.Dream_feature__fmuei p { position: absolute; z-index: 3; right: 42px; bottom: 34px; left: 42px; color: white; font-size: clamp(20px, 2vw, 29px); line-height: 1.25; }
-.Dream_button__BVuWk { display: block; width: -moz-fit-content; width: fit-content; margin: 28px auto 0; padding: 14px 24px; border-radius: 999px; background: #f58211; color: white; font-family: var(--font-utility); font-size: 15px; font-weight: 600; transition: transform 180ms ease, background 180ms ease; }.Dream_button__BVuWk:hover { background: #dc6d08; transform: translateY(-2px); }
-@media (max-width: 1050px) { .Dream_villageLayout__X2jdj { grid-template-columns: 1fr 1.5fr 1fr; column-gap: 22px; }.Dream_point__Unfu4 { gap: 10px; }.Dream_point__Unfu4::after { display: none; }.Dream_iconWrap__B9Bpl { flex-basis: 54px; width: 54px; height: 54px; }.Dream_iconWrap__B9Bpl svg { width: 38px; } }
-@media (max-width: 760px) { .Dream_section__VL3Sp { padding: 42px 20px 48px; }.Dream_subtitle__J9FU3 { margin-bottom: 28px; }.Dream_villageLayout__X2jdj { display: flex; flex-direction: column; gap: 22px; }.Dream_feature__fmuei { order: -1; width: 100%; aspect-ratio: 1.25; }.Dream_point__Unfu4 { width: 100%; max-width: none; }.Dream_point__Unfu4.Dream_left__8E6H_, .Dream_point__Unfu4.Dream_right__HTcq4 { align-self: stretch; } }
-
-@media (max-width: 480px) {
-	.Dream_section__VL3Sp { padding: 34px 16px 42px; }
-	.Dream_title__X_eUR { font-size: 36px; }
-	.Dream_subtitle__J9FU3 { font-size: 14px; }
-	.Dream_feature__fmuei { aspect-ratio: 1.05; }
-	.Dream_feature__fmuei p { right: 20px; bottom: 22px; left: 20px; font-size: 21px; }
-	.Dream_point__Unfu4 { gap: 12px; }
-	.Dream_iconWrap__B9Bpl { flex-basis: 48px; width: 48px; height: 48px; }
-	.Dream_iconWrap__B9Bpl svg { width: 34px; }
-}
 /*!*****************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[3]!./components/About/About.module.css ***!
   \*****************************************************************************************************************************************************************************************************************************************************************************/
@@ -334,6 +275,45 @@
   min-height: 44px;
 }
 
+.About_successMessage__Rb2aC {
+  flex: 1 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  padding: 24px;
+  text-align: center;
+  color: var(--navy);
+}
+
+.About_successMark__HEO3G {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  background: var(--marigold);
+  color: var(--paper);
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.About_successMessage__Rb2aC h4 {
+  max-width: 260px;
+  font-size: 24px;
+  line-height: 1.15;
+}
+
+.About_successMessage__Rb2aC p {
+  max-width: 280px;
+  margin-top: 12px;
+  color: #5b554a;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
 @media (max-width: 860px) {
   .About_layout__sS9Vp {
     grid-template-columns: 1fr;
@@ -374,6 +354,64 @@
   }
 }
 
+/*!*******************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[3]!./components/BranchDivider.module.css ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************/
+.BranchDivider_divider__7_e5p {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: min(100% - 48px, var(--container));
+  margin: 0 auto;
+  padding: 24px 0;
+  color: var(--maroon);
+}
+
+.BranchDivider_line__47bkf {
+  height: 1px;
+  flex: 1 1;
+  background: currentColor;
+  opacity: 0.3;
+}
+
+.BranchDivider_label__Bs4fb {
+  font-family: var(--font-utility);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/*!*****************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[3]!./components/Dream/Dream.module.css ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************/
+.Dream_section__VL3Sp { background: #fff8f2; color: #262626; padding: 42px 24px 28px; }
+.Dream_container__y8FNW { max-width: 1320px; margin: 0 auto; }
+.Dream_title__X_eUR { color: #050505; font-size: clamp(42px, 4vw, 66px); font-weight: 600; letter-spacing: -0.055em; text-align: center; }
+.Dream_subtitle__J9FU3 { max-width: 980px; margin: 8px auto 28px; color: #222; font-family: var(--font-utility); font-size: clamp(14px, 1.25vw, 18px); line-height: 1.35; text-align: center; }
+.Dream_villageLayout__X2jdj { position: relative; display: grid; grid-template-columns: minmax(240px, 1fr) minmax(440px, 640px) minmax(240px, 1fr); grid-template-rows: repeat(3, 1fr); grid-column-gap: 46px; column-gap: 46px; grid-row-gap: 12px; row-gap: 12px; min-height: 450px; align-items: center; }
+.Dream_point__Unfu4 { position: relative; display: flex; align-items: flex-start; gap: 20px; max-width: 300px; font-family: var(--font-utility); }
+.Dream_point__Unfu4.Dream_left__8E6H_ { grid-column: 1; }.Dream_point__Unfu4.Dream_right__HTcq4 { grid-column: 3; }.Dream_point__Unfu4.Dream_top__8cMWN { grid-row: 1; }.Dream_point__Unfu4.Dream_middle__QIxQp { grid-row: 2; }.Dream_point__Unfu4.Dream_bottom__XskDe { grid-row: 3; }
+.Dream_point__Unfu4::after { position: absolute; top: 48px; width: 105px; height: 68px; border-top: 2px dashed rgba(245, 130, 17, 0.48); content: ""; }
+.Dream_point__Unfu4.Dream_left__8E6H_::after { right: -50px; border-radius: 50% 0 0 0; transform: rotate(16deg); }
+.Dream_point__Unfu4.Dream_right__HTcq4::after { left: -50px; border-radius: 0 50% 0 0; transform: rotate(-16deg); }
+.Dream_iconWrap__B9Bpl { flex: 0 0 68px; display: grid; width: 68px; height: 68px; place-items: center; color: #f58211; }
+.Dream_point__Unfu4 h3 { color: #171717; font-family: var(--font-utility); font-size: 16px; font-weight: 700; line-height: 1.2; }.Dream_point__Unfu4 p { margin-top: 8px; color: #656565; font-size: 13px; line-height: 1.55; }
+.Dream_feature__fmuei { position: relative; grid-column: 2; grid-row: 1 / 4; align-self: center; width: 100%; max-width: 640px; aspect-ratio: 1; overflow: hidden; border-radius: 50%; background: #fff; }.Dream_featureImage__kYwPP { display: block; width: 100%; height: 100%; object-fit: contain; }
+.Dream_button__BVuWk { display: block; width: -moz-fit-content; width: fit-content; margin: 28px auto 0; padding: 14px 24px; border-radius: 999px; background: #f58211; color: white; font-family: var(--font-utility); font-size: 15px; font-weight: 600; transition: transform 180ms ease, background 180ms ease; }.Dream_button__BVuWk:hover { background: #dc6d08; transform: translateY(-2px); }
+@media (max-width: 1050px) { .Dream_villageLayout__X2jdj { grid-template-columns: 1fr 1.5fr 1fr; column-gap: 22px; }.Dream_point__Unfu4 { gap: 10px; }.Dream_point__Unfu4::after { display: none; }.Dream_iconWrap__B9Bpl { flex-basis: 54px; width: 54px; height: 54px; }.Dream_iconWrap__B9Bpl svg { width: 38px; } }
+@media (max-width: 760px) { .Dream_section__VL3Sp { padding: 42px 20px 48px; }.Dream_subtitle__J9FU3 { margin-bottom: 28px; }.Dream_villageLayout__X2jdj { display: flex; flex-direction: column; gap: 22px; }.Dream_feature__fmuei { order: -1; width: min(100%, 620px); aspect-ratio: 1; }.Dream_point__Unfu4 { width: 100%; max-width: none; }.Dream_point__Unfu4.Dream_left__8E6H_, .Dream_point__Unfu4.Dream_right__HTcq4 { align-self: stretch; } }
+
+@media (max-width: 480px) {
+	.Dream_section__VL3Sp { padding: 34px 16px 42px; }
+	.Dream_title__X_eUR { font-size: 36px; }
+	.Dream_subtitle__J9FU3 { font-size: 14px; }
+	.Dream_feature__fmuei { width: min(100%, 390px); }
+	.Dream_point__Unfu4 { gap: 12px; }
+	.Dream_iconWrap__B9Bpl { flex-basis: 48px; width: 48px; height: 48px; }
+	.Dream_iconWrap__B9Bpl svg { width: 34px; }
+}
 /*!*******************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[3]!./components/Footer/Footer.module.css ***!
   \*******************************************************************************************************************************************************************************************************************************************************************************/
@@ -1051,24 +1089,6 @@
   border-radius: 24px 24px 0 0;
 }
 
-.impact_imageFrame___pItl {
-  width: 100%;
-  height: 100%;
-  border-radius: 20px 20px 0 0;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.18);
-}
-
-.impact_cardImage__bW7RA {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
 .impact_iconCanvas__JMzef {
   width: 150px;
   height: 150px;
@@ -1293,6 +1313,11 @@
 	transition: background 180ms ease, transform 180ms ease;
 }
 
+.Stories_member__lyagU:focus-visible {
+	outline: 3px solid var(--gold);
+	outline-offset: 4px;
+}
+
 .Stories_member__lyagU:hover {
 	z-index: 1;
 	background: var(--navy-soft);
@@ -1341,17 +1366,40 @@
 .Stories_tone1__RJOj9 .Stories_number__c58L7 { color: #a9c989; }
 .Stories_tone2__cHvig .Stories_number__c58L7 { color: #e1b3a2; }
 
-.Stories_memberDetails__4Qrob span {
-	display: block;
-	margin-bottom: 7px;
-	color: rgba(253, 248, 239, 0.54);
+.Stories_memberDetails__4Qrob { padding: 0 8px 8px; }
+
+.Stories_designation__XLw7G {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 7px;
+	margin-bottom: 10px;
+	padding: 5px 10px 6px;
+	border-left: 3px solid var(--marigold);
+	background: rgba(232, 135, 30, 0.14);
+	color: var(--marigold);
 	font-family: var(--font-utility);
-	font-size: 11px;
-	letter-spacing: 0.08em;
+}
+
+.Stories_designationLabel__35BDf {
+	color: rgba(253, 248, 239, 0.66);
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.1em;
 	text-transform: uppercase;
 }
 
-.Stories_memberDetails__4Qrob { padding: 0 8px 8px; }
+.Stories_designation__XLw7G strong {
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.Stories_marathiDesignation__K_9dQ {
+	color: rgba(253, 248, 239, 0.78);
+	font-family: var(--font-devanagari);
+	font-size: 13px;
+}
 
 .Stories_member__lyagU h3 {
 	color: var(--cream);

@@ -11,7 +11,7 @@ export default function Hero() {
         <div className={styles.videoWrapper}>
           <Image
             src="/Main img.jpeg"
-            alt="Aai Remai Devi Foundation community gathering"
+            alt="Aai Remai Devi Education And Social Foundation community gathering"
             width={1153}
             height={768}
             className={styles.heroImage}
@@ -60,8 +60,8 @@ export default function Hero() {
         {/* Bottom Centered Logo */}
         <div className={styles.logoWrap}>
           <Image
-            src="/BATCH.jpg"
-            alt="Aai Remai Devi Foundation Logo"
+            src="/Village.jpeg"
+            alt="Aai Remai Devi Education And Social Foundation Logo"
             width={160}
             height={160}
             className={styles.centerLogo}

@@ -10,17 +10,16 @@
 .point.right::after { left: -50px; border-radius: 0 50% 0 0; transform: rotate(-16deg); }
 .iconWrap { flex: 0 0 68px; display: grid; width: 68px; height: 68px; place-items: center; color: #f58211; }
 .point h3 { color: #171717; font-family: var(--font-utility); font-size: 16px; font-weight: 700; line-height: 1.2; }.point p { margin-top: 8px; color: #656565; font-size: 13px; line-height: 1.55; }
-.feature { position: relative; grid-column: 2; grid-row: 1 / 4; align-self: center; overflow: visible; aspect-ratio: 1.45; border-radius: 20px; background: #ddd; }.featureVideo { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }.feature p { position: absolute; z-index: 3; right: 42px; bottom: 34px; left: 42px; color: white; font-size: clamp(20px, 2vw, 29px); line-height: 1.25; }
+.feature { position: relative; grid-column: 2; grid-row: 1 / 4; align-self: center; width: 100%; max-width: 640px; aspect-ratio: 1; overflow: hidden; border-radius: 50%; background: #fff; }.featureImage { display: block; width: 100%; height: 100%; object-fit: contain; }
 .button { display: block; width: fit-content; margin: 28px auto 0; padding: 14px 24px; border-radius: 999px; background: #f58211; color: white; font-family: var(--font-utility); font-size: 15px; font-weight: 600; transition: transform 180ms ease, background 180ms ease; }.button:hover { background: #dc6d08; transform: translateY(-2px); }
 @media (max-width: 1050px) { .villageLayout { grid-template-columns: 1fr 1.5fr 1fr; column-gap: 22px; }.point { gap: 10px; }.point::after { display: none; }.iconWrap { flex-basis: 54px; width: 54px; height: 54px; }.iconWrap svg { width: 38px; } }
-@media (max-width: 760px) { .section { padding: 42px 20px 48px; }.subtitle { margin-bottom: 28px; }.villageLayout { display: flex; flex-direction: column; gap: 22px; }.feature { order: -1; width: 100%; aspect-ratio: 1.25; }.point { width: 100%; max-width: none; }.point.left, .point.right { align-self: stretch; } }
+@media (max-width: 760px) { .section { padding: 42px 20px 48px; }.subtitle { margin-bottom: 28px; }.villageLayout { display: flex; flex-direction: column; gap: 22px; }.feature { order: -1; width: min(100%, 620px); aspect-ratio: 1; }.point { width: 100%; max-width: none; }.point.left, .point.right { align-self: stretch; } }
 
 @media (max-width: 480px) {
 	.section { padding: 34px 16px 42px; }
 	.title { font-size: 36px; }
 	.subtitle { font-size: 14px; }
-	.feature { aspect-ratio: 1.05; }
-	.feature p { right: 20px; bottom: 22px; left: 20px; font-size: 21px; }
+	.feature { width: min(100%, 390px); }
 	.point { gap: 12px; }
 	.iconWrap { flex-basis: 48px; width: 48px; height: 48px; }
 	.iconWrap svg { width: 34px; }

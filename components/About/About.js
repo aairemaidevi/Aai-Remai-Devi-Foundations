@@ -1,6 +1,22 @@
+"use client";
+
+import { useState } from "react";
 import styles from "./About.module.css";
 
 export default function About() {
+  const [volunteerName, setVolunteerName] = useState("");
+
+  function handleSubmit(event) {
+    const formData = new FormData(event.currentTarget);
+
+    if (formData.get("supportType") !== "volunteer") {
+      return;
+    }
+
+    event.preventDefault();
+    setVolunteerName(String(formData.get("volunteerName") || "").trim());
+  }
+
   return (
     <section className={styles.section} id="get-involved">
       <div className={`container ${styles.layout}`}>
@@ -29,7 +45,14 @@ export default function About() {
           <p className={styles.cardText}>
             Choose a cause, give what you can, or join us as a volunteer.
           </p>
-          <form className={styles.form} action="#" method="post">
+          {volunteerName ? (
+            <div className={styles.successMessage} role="status" aria-live="polite">
+              <span className={styles.successMark} aria-hidden="true">&#10003;</span>
+              <h4>Thank you for joining Aai Ramai Devi</h4>
+              <p>Thank you, {volunteerName}. We are grateful for your support.</p>
+            </div>
+          ) : (
+          <form className={styles.form} action="#" method="post" onSubmit={handleSubmit}>
             <label className={styles.label} htmlFor="cause">Choose your cause</label>
             <select className={styles.field} id="cause" name="cause" defaultValue="education">
               <option value="education">Education</option>
@@ -90,22 +113,23 @@ export default function About() {
 
             <div className={styles.volunteerFields}>
               <label className={styles.label} htmlFor="volunteer-name">Name</label>
-              <input className={styles.field} id="volunteer-name" name="volunteerName" type="text" autoComplete="name" placeholder="Your name" />
+              <input className={styles.field} id="volunteer-name" name="volunteerName" type="text" autoComplete="name" placeholder="Your name" required />
 
               <label className={styles.label} htmlFor="volunteer-email">Email</label>
-              <input className={styles.field} id="volunteer-email" name="volunteerEmail" type="email" autoComplete="email" placeholder="you@example.com" />
+              <input className={styles.field} id="volunteer-email" name="volunteerEmail" type="email" autoComplete="email" placeholder="you@example.com" required />
 
               <label className={styles.label} htmlFor="volunteer-mobile">Mobile number</label>
-              <input className={styles.field} id="volunteer-mobile" name="volunteerMobile" type="tel" autoComplete="tel" placeholder="Your mobile number" />
+              <input className={styles.field} id="volunteer-mobile" name="volunteerMobile" type="tel" autoComplete="tel" placeholder="Your mobile number" required />
 
               <label className={styles.label} htmlFor="volunteer-address">Address</label>
-              <textarea className={`${styles.field} ${styles.address}`} id="volunteer-address" name="volunteerAddress" autoComplete="street-address" placeholder="Your address" rows="3" />
+              <textarea className={`${styles.field} ${styles.address}`} id="volunteer-address" name="volunteerAddress" autoComplete="street-address" placeholder="Your address" rows="3" required />
 
               <button type="submit" className={`btn btn-navy ${styles.donate}`}>
                 Submit
               </button>
             </div>
           </form>
+          )}
         </div>
       </div>
     </section>

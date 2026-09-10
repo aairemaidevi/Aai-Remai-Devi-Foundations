@@ -96,15 +96,6 @@ const tabs = [
   "economy",
 ];
 
-const impactImages = [
-  "/1.jpeg",
-  "/2.jpeg",
-  "/3.jpeg",
-  "/4.jpeg",
-  "/5.jpeg",
-  "/Main img.jpeg",
-];
-
 export default function Impact() {
   const [activeTab, setActiveTab] = useState("economy");
   const activeSection = impactData[activeTab];
@@ -139,9 +130,6 @@ export default function Impact() {
         <div className={styles.grid}>
           {activeSection.cards.map((card, index) => {
             const Icon = card.icon;
-            const showImage = index === 1 || index === 3;
-            const imageSlot = index === 1 ? 0 : 1;
-            const imageIndex = (tabs.indexOf(activeTab) * 2 + imageSlot) % impactImages.length;
 
             return (
               <article
@@ -159,15 +147,9 @@ export default function Impact() {
                 </div>
 
                 <div className={styles.mediaWrap}>
-                  {showImage ? (
-                    <div className={styles.imageFrame}>
-                      <img src={impactImages[imageIndex]} alt={card.label} className={styles.cardImage} />
-                    </div>
-                  ) : (
-                    <div className={styles.iconCanvas}>
-                      <Icon className={styles.icon} />
-                    </div>
-                  )}
+                  <div className={styles.iconCanvas}>
+                    <Icon className={styles.icon} />
+                  </div>
                 </div>
               </article>
             );

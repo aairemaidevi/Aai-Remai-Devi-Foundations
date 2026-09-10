@@ -77,6 +77,11 @@
 	transition: background 180ms ease, transform 180ms ease;
 }
 
+.member:focus-visible {
+	outline: 3px solid var(--gold);
+	outline-offset: 4px;
+}
+
 .member:hover {
 	z-index: 1;
 	background: var(--navy-soft);
@@ -125,17 +130,40 @@
 .tone1 .number { color: #a9c989; }
 .tone2 .number { color: #e1b3a2; }
 
-.memberDetails span {
-	display: block;
-	margin-bottom: 7px;
-	color: rgba(253, 248, 239, 0.54);
+.memberDetails { padding: 0 8px 8px; }
+
+.designation {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 7px;
+	margin-bottom: 10px;
+	padding: 5px 10px 6px;
+	border-left: 3px solid var(--marigold);
+	background: rgba(232, 135, 30, 0.14);
+	color: var(--marigold);
 	font-family: var(--font-utility);
-	font-size: 11px;
-	letter-spacing: 0.08em;
+}
+
+.designationLabel {
+	color: rgba(253, 248, 239, 0.66);
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.1em;
 	text-transform: uppercase;
 }
 
-.memberDetails { padding: 0 8px 8px; }
+.designation strong {
+	font-size: 14px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+.marathiDesignation {
+	color: rgba(253, 248, 239, 0.78);
+	font-family: var(--font-devanagari);
+	font-size: 13px;
+}
 
 .member h3 {
 	color: var(--cream);

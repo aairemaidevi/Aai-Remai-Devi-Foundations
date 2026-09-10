@@ -1,0 +1,21 @@
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+self["webpackHotUpdate_N_E"]("app/page",{
+
+/***/ "(app-pages-browser)/./components/Dream/Dream.module.css":
+/*!*******************************************!*\
+  !*** ./components/Dream/Dream.module.css ***!
+  \*******************************************/
+/***/ (function(module, __unused_webpack_exports, __webpack_require__) {
+
+eval(__webpack_require__.ts("// extracted by mini-css-extract-plugin\nmodule.exports = {\"section\":\"Dream_section__VL3Sp\",\"container\":\"Dream_container__y8FNW\",\"title\":\"Dream_title__X_eUR\",\"subtitle\":\"Dream_subtitle__J9FU3\",\"villageLayout\":\"Dream_villageLayout__X2jdj\",\"point\":\"Dream_point__Unfu4\",\"left\":\"Dream_left__8E6H_\",\"right\":\"Dream_right__HTcq4\",\"top\":\"Dream_top__8cMWN\",\"middle\":\"Dream_middle__QIxQp\",\"bottom\":\"Dream_bottom__XskDe\",\"iconWrap\":\"Dream_iconWrap__B9Bpl\",\"feature\":\"Dream_feature__fmuei\",\"featureImage\":\"Dream_featureImage__kYwPP\",\"button\":\"Dream_button__BVuWk\"};\n    if(true) {\n      // 1789057577679\n      var cssReload = __webpack_require__(/*! ./node_modules/next/dist/compiled/mini-css-extract-plugin/hmr/hotModuleReplacement.js */ \"(app-pages-browser)/./node_modules/next/dist/compiled/mini-css-extract-plugin/hmr/hotModuleReplacement.js\")(module.id, {\"publicPath\":\"/_next/\",\"esModule\":false,\"locals\":true});\n      module.hot.dispose(cssReload);\n      \n    }\n  \nmodule.exports.__checksum = \"a331d3b26cec\"\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKGFwcC1wYWdlcy1icm93c2VyKS8uL2NvbXBvbmVudHMvRHJlYW0vRHJlYW0ubW9kdWxlLmNzcyIsIm1hcHBpbmdzIjoiQUFBQTtBQUNBLGtCQUFrQjtBQUNsQixPQUFPLElBQVU7QUFDakI7QUFDQSxzQkFBc0IsbUJBQU8sQ0FBQyx3TUFBbUosY0FBYyxzREFBc0Q7QUFDclAsTUFBTSxVQUFVO0FBQ2hCO0FBQ0E7QUFDQTtBQUNBLHlCQUF5QiIsInNvdXJjZXMiOlsid2VicGFjazovL19OX0UvLi9jb21wb25lbnRzL0RyZWFtL0RyZWFtLm1vZHVsZS5jc3M/ZDgyZiJdLCJzb3VyY2VzQ29udGVudCI6WyIvLyBleHRyYWN0ZWQgYnkgbWluaS1jc3MtZXh0cmFjdC1wbHVnaW5cbm1vZHVsZS5leHBvcnRzID0ge1wic2VjdGlvblwiOlwiRHJlYW1fc2VjdGlvbl9fVkwzU3BcIixcImNvbnRhaW5lclwiOlwiRHJlYW1fY29udGFpbmVyX195OEZOV1wiLFwidGl0bGVcIjpcIkRyZWFtX3RpdGxlX19YX2VVUlwiLFwic3VidGl0bGVcIjpcIkRyZWFtX3N1YnRpdGxlX19KOUZVM1wiLFwidmlsbGFnZUxheW91dFwiOlwiRHJlYW1fdmlsbGFnZUxheW91dF9fWDJqZGpcIixcInBvaW50XCI6XCJEcmVhbV9wb2ludF9fVW5mdTRcIixcImxlZnRcIjpcIkRyZWFtX2xlZnRfXzhFNkhfXCIsXCJyaWdodFwiOlwiRHJlYW1fcmlnaHRfX0hUY3E0XCIsXCJ0b3BcIjpcIkRyZWFtX3RvcF9fOGNNV05cIixcIm1pZGRsZVwiOlwiRHJlYW1fbWlkZGxlX19RSXhRcFwiLFwiYm90dG9tXCI6XCJEcmVhbV9ib3R0b21fX1hza0RlXCIsXCJpY29uV3JhcFwiOlwiRHJlYW1faWNvbldyYXBfX0I5QnBsXCIsXCJmZWF0dXJlXCI6XCJEcmVhbV9mZWF0dXJlX19mbXVlaVwiLFwiZmVhdHVyZUltYWdlXCI6XCJEcmVhbV9mZWF0dXJlSW1hZ2VfX2tZd1BQXCIsXCJidXR0b25cIjpcIkRyZWFtX2J1dHRvbl9fQlZ1V2tcIn07XG4gICAgaWYobW9kdWxlLmhvdCkge1xuICAgICAgLy8gMTc4OTA1NzU3NzY3OVxuICAgICAgdmFyIGNzc1JlbG9hZCA9IHJlcXVpcmUoXCJDOi9Vc2Vycy9hZG1pbi9Eb3dubG9hZHMvYWFpLXJlbWFpLWRldmktbmV4dGpzL2FhaS1yZW1haS1kZXZpL25vZGVfbW9kdWxlcy9uZXh0L2Rpc3QvY29tcGlsZWQvbWluaS1jc3MtZXh0cmFjdC1wbHVnaW4vaG1yL2hvdE1vZHVsZVJlcGxhY2VtZW50LmpzXCIpKG1vZHVsZS5pZCwge1wicHVibGljUGF0aFwiOlwiL19uZXh0L1wiLFwiZXNNb2R1bGVcIjpmYWxzZSxcImxvY2Fsc1wiOnRydWV9KTtcbiAgICAgIG1vZHVsZS5ob3QuZGlzcG9zZShjc3NSZWxvYWQpO1xuICAgICAgXG4gICAgfVxuICBcbm1vZHVsZS5leHBvcnRzLl9fY2hlY2tzdW0gPSBcImEzMzFkM2IyNmNlY1wiXG4iXSwibmFtZXMiOltdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(app-pages-browser)/./components/Dream/Dream.module.css\n"));
+
+/***/ })
+
+});

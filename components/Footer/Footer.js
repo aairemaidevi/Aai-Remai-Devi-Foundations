@@ -8,8 +8,8 @@ export default function Footer() {
         <div className={styles.brandCol}>
           <div className={styles.brandRow}>
             <Image
-              src="/BATCH.jpg"
-              alt="Aai Remai Devi Foundation logo"
+              src="/Village.jpeg"
+              alt="Aai Remai Devi Education And Social Foundation logo"
               width={44}
               height={44}
               className={styles.logo}
@@ -45,7 +45,7 @@ export default function Footer() {
       </div>
 
       <div className={`container ${styles.bottom}`}>
-        <span>© {new Date().getFullYear()} Aai Remai Devi Foundation. All rights reserved.</span>
+        <span>© {new Date().getFullYear()} Aai Remai Devi Education And Social Foundation. All rights reserved.</span>
         <span>Registered under Section 8, Maharashtra</span>
       </div>
     </footer>
