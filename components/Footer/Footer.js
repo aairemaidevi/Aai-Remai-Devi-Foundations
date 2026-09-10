@@ -8,7 +8,7 @@ export default function Footer() {
         <div className={styles.brandCol}>
           <div className={styles.brandRow}>
             <Image
-              src="/Village.jpeg"
+              src="/BATCH.jpg"
               alt="Aai Remai Devi Education And Social Foundation logo"
               width={44}
               height={44}

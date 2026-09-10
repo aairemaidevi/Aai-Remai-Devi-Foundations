@@ -36,7 +36,7 @@ export default function Header() {
       <div className={styles.bar}>
         <a href="#top" className={styles.brand}>
           <Image
-            src="/Village.jpeg"
+            src="/BATCH.jpg"
             alt="Aai Remai Devi Education And Social Foundation logo"
             width={84}
             height={84}

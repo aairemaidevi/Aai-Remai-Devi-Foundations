@@ -60,7 +60,7 @@ export default function Hero() {
         {/* Bottom Centered Logo */}
         <div className={styles.logoWrap}>
           <Image
-            src="/Village.jpeg"
+            src="/BATCH.jpg"
             alt="Aai Remai Devi Education And Social Foundation Logo"
             width={160}
             height={160}
