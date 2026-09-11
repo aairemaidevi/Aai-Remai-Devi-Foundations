@@ -79,7 +79,7 @@ const impactData = {
     accent: "#1fa76a",
     cardBg: "#dff2e7",
     cards: [
-      { value: "Rs. 1260", label: "million", desc: "added to annual GDP through community livelihood initiatives", icon: WalletCards },
+      { value: "Donation", label: "million", desc: "added to annual GDP through community livelihood initiatives", icon: WalletCards },
       { value: "50,800+", label: "entrepreneurs", desc: "empowered across livestock and farm initiatives", icon: Globe2 },
       { value: "10,500+", label: "youth", desc: "skilled through training programs", icon: Briefcase },
       { value: "103,000+", label: "farmers", desc: "trained through capacity-building programmes", icon: Tractor },
@@ -104,10 +104,6 @@ export default function Impact() {
     <section className={styles.section} id="aim">
       <div className={styles.container}>
         <h2 className={styles.title}>Our AIM </h2>
-
-        <p className={styles.subtitle}>
-          Every number represents a life touched. Over 600,000 lives have been positively impacted through Swades&apos; holistic interventions
-        </p>
 
         <div className={styles.tabs}>
           {tabs.map((tab) => (
