@@ -13,7 +13,7 @@ export const metadata = {
 };
 
 export default async function AwardsPage() {
-  const { awards, error } = await getAwards();
+  const { awards, error, usingFallback } = await getAwards();
 
   return (
     <main className={styles.page}>
@@ -72,6 +72,12 @@ export default async function AwardsPage() {
                 filenames will appear as their story titles here.
               </p>
             </div>
+          )}
+          {!error && usingFallback && (
+            <p className={styles.syncNote}>
+              Showing your uploaded award photos. Configure Supabase in Vercel
+              to include future uploads automatically.
+            </p>
           )}
         </section>
 

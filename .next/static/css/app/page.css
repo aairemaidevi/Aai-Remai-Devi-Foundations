@@ -593,6 +593,14 @@
   font-size: 14px;
 }
 
+.Award_syncNote__4rMgE {
+  margin-top: 12px;
+  color: rgba(36, 29, 18, 0.54);
+  font-family: var(--font-utility);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
 .Award_card__0PP0y {
   display: block;
   overflow: hidden;

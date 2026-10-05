@@ -4,7 +4,7 @@ import { getAwards } from "@/lib/awards";
 import styles from "./Award.module.css";
 
 export default async function Award() {
-  const { awards, error } = await getAwards();
+  const { awards, error, usingFallback } = await getAwards();
 
   return (
     <section className={styles.section} id="awards" aria-labelledby="awards-title">
@@ -52,6 +52,12 @@ export default async function Award() {
                 Explore all recognitions <ArrowRight size={16} />
               </Link>
             </div>
+            {usingFallback && (
+              <p className={styles.syncNote}>
+                Showing your uploaded award photos. Configure Supabase in Vercel
+                to include future uploads automatically.
+              </p>
+            )}
           </>
         ) : (
           <div className={styles.sectionEmpty}>

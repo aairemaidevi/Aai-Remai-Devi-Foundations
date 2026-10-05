@@ -175,6 +175,14 @@
   font-size: 14px;
 }
 
+.syncNote {
+  margin-top: 12px;
+  color: rgba(36, 29, 18, 0.54);
+  font-family: var(--font-utility);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
 .card {
   display: block;
   overflow: hidden;

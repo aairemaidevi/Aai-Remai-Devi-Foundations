@@ -84,6 +84,10 @@ Variables** for the Production environment (and Preview/Development if needed),
 then redeploy. `NEXT_PUBLIC_` values are included when Next.js builds the
 deployment, so adding them after a deployment requires a fresh deployment.
 
+The awards gallery can still display the currently uploaded award photos when
+Vercel has no Supabase variables. Add both variables in Vercel to let the
+gallery automatically discover future files added to the `AWARD` folder.
+
 ## Things you'll likely want to customize next
 
 - Replace the placeholder stats in `components/Stats.js` with your
