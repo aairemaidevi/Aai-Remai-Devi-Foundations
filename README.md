@@ -68,6 +68,22 @@ npm run build
 npm run start
 ```
 
+## Supabase and Vercel
+
+The site reads public Supabase settings from these environment variables:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+Copy `.env.example` to `.env.local` and fill in the values from **Supabase →
+Project Settings → API** for local development. Do not use a service-role key
+for either variable or commit real keys to the repository.
+
+For Vercel, add both variables under **Project → Settings → Environment
+Variables** for the Production environment (and Preview/Development if needed),
+then redeploy. `NEXT_PUBLIC_` values are included when Next.js builds the
+deployment, so adding them after a deployment requires a fresh deployment.
+
 ## Things you'll likely want to customize next
 
 - Replace the placeholder stats in `components/Stats.js` with your
