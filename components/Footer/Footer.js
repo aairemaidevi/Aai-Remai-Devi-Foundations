@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import styles from "./Footer.module.css";
 
 export default function Footer() {
@@ -24,7 +25,7 @@ export default function Footer() {
           <h4>Who We Are</h4>
           <a href="#">Our Story</a>
           <a href="#">Our Team</a>
-          <a href="#">Awards &amp; Recognition</a>
+          <Link href="/awards">Awards &amp; Recognition</Link>
         </div>
 
         <div className={styles.col}>

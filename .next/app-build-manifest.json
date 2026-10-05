@@ -12,6 +12,18 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
+    "/awards/[slug]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/awards/[slug]/page.css",
+      "static/chunks/app/awards/[slug]/page.js"
+    ],
+    "/awards/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/awards/page.css",
+      "static/chunks/app/awards/page.js"
+    ],
     "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",

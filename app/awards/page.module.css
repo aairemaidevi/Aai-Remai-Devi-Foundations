@@ -1,0 +1,294 @@
+.page {
+  min-height: 100vh;
+  padding: 42px 24px 70px;
+  background:
+    radial-gradient(ellipse at 82% 4%, rgba(232, 135, 30, 0.11), transparent 32%),
+    var(--cream);
+}
+
+.shell {
+  width: min(100%, 1120px);
+  margin: 0 auto;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--navy);
+  font-family: var(--font-utility);
+  font-size: 13px;
+  font-weight: 600;
+  transition: color 180ms ease, gap 180ms ease;
+}
+
+.backLink:hover {
+  gap: 13px;
+  color: var(--marigold-deep);
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  min-height: 345px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+  margin-top: 32px;
+  padding: 56px 64px;
+  overflow: hidden;
+  border-radius: var(--radius-l);
+  background:
+    linear-gradient(115deg, rgba(15, 27, 61, 0.98), rgba(22, 38, 90, 0.94)),
+    var(--navy);
+  color: var(--cream);
+}
+
+.hero::after {
+  position: absolute;
+  top: -160px;
+  right: 100px;
+  width: 440px;
+  height: 440px;
+  border: 1px solid rgba(253, 248, 239, 0.12);
+  border-radius: 50%;
+  content: "";
+  box-shadow: 0 0 0 38px rgba(253, 248, 239, 0.025), 0 0 0 78px rgba(253, 248, 239, 0.025);
+  pointer-events: none;
+}
+
+.heroCopy {
+  position: relative;
+  z-index: 1;
+  max-width: 650px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: #f2b557;
+  font-family: var(--font-utility);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  max-width: 12ch;
+  margin-top: 18px;
+  color: var(--cream);
+  font-size: clamp(42px, 6vw, 72px);
+  font-weight: 600;
+  letter-spacing: -0.055em;
+  line-height: 1.02;
+}
+
+.heroCopy > p {
+  max-width: 49ch;
+  margin-top: 21px;
+  color: rgba(253, 248, 239, 0.75);
+  font-family: var(--font-utility);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.heroMark {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 170px;
+  height: 170px;
+  flex: 0 0 170px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 1px solid rgba(242, 181, 87, 0.48);
+  border-radius: 50%;
+  color: #f2b557;
+}
+
+.heroMark span {
+  font-family: var(--font-utility);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.heroCount {
+  position: absolute;
+  right: 32px;
+  bottom: 28px;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  color: rgba(253, 248, 239, 0.72);
+  font-family: var(--font-utility);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.heroCount span:first-child {
+  color: #f2b557;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.gallery {
+  padding: 78px 12px 0;
+}
+
+.galleryHeading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 36px;
+  margin-bottom: 32px;
+}
+
+.sectionLabel,
+.cardLabel {
+  color: var(--marigold-deep);
+  font-family: var(--font-utility);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.galleryHeading h2 {
+  margin-top: 11px;
+  font-size: clamp(29px, 4vw, 43px);
+  font-weight: 600;
+  letter-spacing: -0.045em;
+}
+
+.galleryHeading > p {
+  max-width: 35ch;
+  padding-bottom: 4px;
+  color: rgba(36, 29, 18, 0.7);
+  font-family: var(--font-utility);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.emptyState,
+.message {
+  border: 1px solid rgba(15, 27, 61, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.68);
+  text-align: center;
+}
+
+.emptyState {
+  display: flex;
+  min-height: 280px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 24px;
+}
+
+.emptyIcon {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  margin-bottom: 17px;
+  border-radius: 50%;
+  background: rgba(232, 135, 30, 0.12);
+  color: var(--marigold-deep);
+}
+
+.emptyState h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.emptyState p {
+  max-width: 56ch;
+  margin-top: 10px;
+  color: rgba(36, 29, 18, 0.7);
+  font-family: var(--font-utility);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.emptyState strong {
+  color: var(--navy);
+  font-weight: 700;
+}
+
+.message {
+  padding: 26px;
+  color: var(--maroon);
+  font-family: var(--font-utility);
+  font-size: 14px;
+}
+
+.footerNote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin: 62px 0 0;
+  color: rgba(36, 29, 18, 0.56);
+  font-family: var(--font-utility);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.footerNote span {
+  width: 36px;
+  height: 1px;
+  background: rgba(15, 27, 61, 0.2);
+}
+
+@media (max-width: 760px) {
+  .page { padding: 28px 18px 52px; }
+  .hero { min-height: 330px; padding: 42px 34px; }
+  .heroMark { width: 118px; height: 118px; flex-basis: 118px; }
+  .heroMark svg { width: 54px; height: 54px; }
+  .heroMark span { font-size: 8px; }
+  .heroCount { right: 22px; bottom: 19px; }
+  .gallery { padding: 58px 0 0; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 17px; }
+  .cardCaption { min-height: 104px; padding: 17px; }
+}
+
+@media (max-width: 520px) {
+  .hero {
+    min-height: 385px;
+    align-items: flex-start;
+    padding: 38px 27px 60px;
+  }
+  .hero h1 { max-width: 9ch; font-size: clamp(42px, 12vw, 58px); }
+  .heroCopy > p { max-width: 37ch; font-size: 13px; }
+  .heroMark { position: absolute; right: 20px; bottom: 24px; width: 76px; height: 76px; }
+  .heroMark svg { width: 36px; height: 36px; }
+  .heroMark span { display: none; }
+  .heroCount { right: auto; bottom: 47px; left: 27px; }
+  .galleryHeading { align-items: flex-start; flex-direction: column; gap: 14px; }
+  .grid { grid-template-columns: 1fr; gap: 18px; }
+  .imageFrame { aspect-ratio: 1.2; }
+  .cardCaption { min-height: auto; }
+  .footerNote { gap: 10px; font-size: 10px; }
+  .footerNote span { width: 20px; flex: 0 0 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .backLink,
+  .card { transition: none; }
+  .backLink:hover,
+  .card:hover { transform: none; }
+}

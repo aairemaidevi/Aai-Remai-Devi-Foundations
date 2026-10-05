@@ -8,6 +8,7 @@ const NAV = [
   { label: "Our Aim", href: "#aim", items: null },
   { label: "Our Work", href: "#work", items: null },
   { label: "Dream Village", href: "#dream", items: null },
+  { label: "Awards", href: "#awards", items: null },
   { label: "The people behind the promise", href: "#people-behind-the-promise", items: null },
   { label: "Get Involved", href: "#get-involved", items: null },
 ];

@@ -1,0 +1,417 @@
+.section {
+  padding: 88px 24px 96px;
+  background:
+    radial-gradient(ellipse at 92% 18%, rgba(232, 135, 30, 0.09), transparent 30%),
+    var(--cream);
+}
+
+.container {
+  width: min(100%, 1180px);
+  margin: 0 auto;
+}
+
+.sectionHeading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 42px;
+  margin-bottom: 34px;
+}
+
+.headingCopy {
+  max-width: 650px;
+}
+
+.sectionEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--marigold-deep);
+  font-family: var(--font-utility);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.headingCopy h2 {
+  margin-top: 13px;
+  font-size: clamp(40px, 5.4vw, 66px);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+}
+
+.titleHighlight {
+  position: relative;
+  display: inline-block;
+  color: var(--marigold-deep);
+}
+
+.titleHighlight::after {
+  position: absolute;
+  right: 2px;
+  bottom: -5px;
+  left: 2px;
+  height: 5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--marigold), rgba(232, 135, 30, 0.16));
+  content: "";
+}
+
+.sectionHeading > p {
+  max-width: 37ch;
+  padding-bottom: 5px;
+  color: rgba(36, 29, 18, 0.7);
+  font-family: var(--font-utility);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.carouselViewport {
+  overflow: hidden;
+  padding: 5px 4px 14px;
+}
+
+.carouselTrack {
+  display: flex;
+  width: max-content;
+  animation: awardMarquee var(--carousel-duration, 32s) linear infinite;
+  will-change: transform;
+}
+
+.carouselGroup {
+  display: grid;
+  gap: 22px;
+  grid-auto-columns: clamp(275px, 29vw, 350px);
+  grid-auto-flow: column;
+  padding-right: 22px;
+}
+
+.carouselViewport:hover .carouselTrack,
+.carouselViewport:focus-within .carouselTrack {
+  animation-play-state: paused;
+}
+
+@keyframes awardMarquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.sectionFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(15, 27, 61, 0.13);
+  color: rgba(36, 29, 18, 0.58);
+  font-family: var(--font-utility);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.allAwardsLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--navy);
+  font-size: 12px;
+  letter-spacing: 0;
+  text-transform: none;
+  transition: gap 180ms ease, color 180ms ease;
+}
+
+.allAwardsLink:hover {
+  gap: 13px;
+  color: var(--marigold-deep);
+}
+
+.sectionEmpty,
+.sectionMessage {
+  border: 1px solid rgba(15, 27, 61, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.72);
+  text-align: center;
+}
+
+.sectionEmpty {
+  display: flex;
+  min-height: 245px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 35px 24px;
+  color: var(--marigold-deep);
+}
+
+.sectionEmpty h3 {
+  margin-top: 16px;
+  color: var(--navy);
+  font-size: 21px;
+  font-weight: 600;
+}
+
+.sectionEmpty p {
+  max-width: 55ch;
+  margin-top: 10px;
+  color: rgba(36, 29, 18, 0.7);
+  font-family: var(--font-utility);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.sectionEmpty strong {
+  color: var(--navy);
+}
+
+.sectionMessage {
+  padding: 24px;
+  color: var(--maroon);
+  font-family: var(--font-utility);
+  font-size: 14px;
+}
+
+.card {
+  display: block;
+  overflow: hidden;
+  border: 1px solid rgba(15, 27, 61, 0.09);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 14px 38px rgba(36, 29, 18, 0.055);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 44px rgba(36, 29, 18, 0.12);
+}
+
+.card:focus-visible,
+.galleryItem:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 4px;
+}
+
+.cardImageFrame {
+  position: relative;
+  aspect-ratio: 1.22;
+  overflow: hidden;
+  background: var(--cream-deep);
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 350ms ease;
+}
+
+.card:hover .cardImage {
+  transform: scale(1.035);
+}
+
+.cardIndex {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  display: grid;
+  width: 37px;
+  height: 37px;
+  place-items: center;
+  border: 1px solid rgba(15, 27, 61, 0.14);
+  border-radius: 50%;
+  background: rgba(253, 248, 239, 0.92);
+  color: var(--navy);
+  font-family: var(--font-utility);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.cardOpen {
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--marigold);
+  color: var(--navy);
+  transition: transform 180ms ease, background 180ms ease;
+}
+
+.card:hover .cardOpen {
+  transform: rotate(45deg);
+  background: var(--cream);
+}
+
+.cardCopy {
+  padding: 22px 22px 21px;
+}
+
+.cardCategory,
+.galleryEyebrow {
+  color: var(--marigold-deep);
+  font-family: var(--font-utility);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.cardCopy h3 {
+  margin-top: 10px;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+
+.cardCopy p {
+  min-height: 44px;
+  margin-top: 9px;
+  color: rgba(36, 29, 18, 0.7);
+  font-family: var(--font-utility);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.readMore {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 17px;
+  color: var(--navy);
+  font-family: var(--font-utility);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.gallery {
+  margin-top: 78px;
+}
+
+.galleryHeading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 23px;
+}
+
+.galleryEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.galleryHeading h2 {
+  margin-top: 10px;
+  font-size: clamp(27px, 3.4vw, 38px);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+
+.galleryHeading > p {
+  max-width: 31ch;
+  padding-bottom: 4px;
+  color: rgba(36, 29, 18, 0.68);
+  font-family: var(--font-utility);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.galleryTrack {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 5px 3px 18px;
+  scroll-padding-inline: 3px;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-color: var(--marigold) rgba(15, 27, 61, 0.09);
+  scrollbar-width: thin;
+}
+
+.galleryItem {
+  position: relative;
+  flex: 0 0 clamp(190px, 27vw, 290px);
+  aspect-ratio: 1.34;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 15px;
+  background: var(--cream-deep);
+  scroll-snap-align: start;
+}
+
+.galleryItemActive {
+  border-color: var(--marigold);
+}
+
+.galleryItem::after {
+  position: absolute;
+  inset: 35% 0 0;
+  background: linear-gradient(transparent, rgba(15, 27, 61, 0.86));
+  content: "";
+  pointer-events: none;
+}
+
+.galleryItem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 300ms ease;
+}
+
+.galleryItem:hover img {
+  transform: scale(1.04);
+}
+
+.galleryItem span {
+  position: absolute;
+  z-index: 1;
+  right: 15px;
+  bottom: 14px;
+  left: 15px;
+  overflow: hidden;
+  color: white;
+  font-family: var(--font-utility);
+  font-size: 12px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 760px) {
+  .section { padding: 68px 20px 76px; }
+  .sectionHeading { align-items: flex-start; flex-direction: column; gap: 16px; }
+  .carouselGroup { grid-auto-columns: clamp(260px, 62vw, 330px); gap: 17px; padding-right: 17px; }
+  .gallery { margin-top: 58px; }
+  .galleryHeading { align-items: flex-start; flex-direction: column; gap: 10px; }
+}
+
+@media (max-width: 520px) {
+  .section { padding: 58px 17px 64px; }
+  .headingCopy h2 { max-width: 12ch; font-size: clamp(38px, 10vw, 50px); }
+  .carouselGroup { grid-auto-columns: 82vw; gap: 18px; padding-right: 18px; }
+  .sectionFooter { align-items: flex-start; flex-direction: column; gap: 13px; }
+  .cardCopy { padding: 19px; }
+  .cardCopy h3 { font-size: 20px; }
+  .galleryItem { flex-basis: 72vw; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carouselViewport { overflow-x: auto; }
+  .carouselTrack { animation: none; }
+  .card,
+  .cardImage,
+  .cardOpen,
+  .galleryItem img { transition: none; }
+  .card:hover,
+  .galleryItem:hover img { transform: none; }
+}

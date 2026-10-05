@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import styles from "./Hero.module.css";
+import { getSiteImageUrl } from "@/lib/siteImages";
 
 export default function Hero() {
   return (
@@ -9,7 +10,7 @@ export default function Hero() {
       <div className={styles.container}>
         <div className={styles.videoWrapper}>
           <Image
-            src="/main.png"
+            src={getSiteImageUrl("HOME/main.png")}
             alt="Aai Remai Devi Education And Social Foundation community gathering"
             width={1536}
             height={1024}

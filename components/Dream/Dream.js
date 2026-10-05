@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import styles from "./Dream.module.css";
+import { getSiteImageUrl } from "@/lib/siteImages";
 
 const dreamPoints = [
   { title: "Swacch (Clean)", description: "Each house has a toilet, drainage system, follows waste segregation and disposal practices and has access to clean drinking water through a tap at home. Village is ODF", icon: Waves, side: "left", position: "top" },
@@ -38,7 +39,7 @@ export default function Dream() {
           {dreamPoints.filter((point) => point.side === "left").map((point) => <DreamPoint key={point.title} point={point} />)}
           <div className={styles.feature}>
             <Image
-              src="/Village.jpeg"
+              src={getSiteImageUrl("DREAM VILLAGE/Village.jpeg")}
               alt="Community members celebrating in a dream village"
               width={1024}
               height={1024}
