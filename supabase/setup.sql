@@ -14,7 +14,7 @@ create table if not exists public.donations (
   donor_email text not null check (char_length(donor_email) between 3 and 254),
   cause text not null check (cause in ('education', 'livelihoods', 'health', 'women')),
   frequency text not null check (frequency in ('once', 'monthly')),
-  amount_rupees numeric(12, 2) not null check (amount_rupees > 0),
+  amount_paise bigint not null check (amount_paise > 0),
   currency text not null default 'INR' check (currency = 'INR'),
   volunteer_updates boolean not null default false,
   payment_provider text,
@@ -26,7 +26,7 @@ create table if not exists public.donations (
 );
 
 alter table public.donations
-  add column if not exists amount_rupees numeric(12, 2);
+  add column if not exists amount_paise bigint;
 
 do $$
 begin
@@ -35,27 +35,28 @@ begin
     from information_schema.columns
     where table_schema = 'public'
       and table_name = 'donations'
-      and column_name = 'amount_paise'
+      and column_name = 'amount_rupees'
   ) then
     execute '
       update public.donations
-      set amount_rupees = amount_paise / 100.0
-      where amount_rupees is null
+      set amount_paise = round(amount_rupees * 100)::bigint
+      where amount_paise is null
     ';
+    execute 'alter table public.donations alter column amount_rupees drop not null';
   end if;
 end $$;
 
 alter table public.donations
-  drop column if exists amount_paise;
+  alter column amount_paise type bigint using amount_paise::bigint;
 
 alter table public.donations
-  alter column amount_rupees set not null;
+  alter column amount_paise set not null;
 
 alter table public.donations
-  drop constraint if exists donations_amount_rupees_positive;
+  drop constraint if exists donations_amount_paise_positive;
 
 alter table public.donations
-  add constraint donations_amount_rupees_positive check (amount_rupees > 0);
+  add constraint donations_amount_paise_positive check (amount_paise > 0);
 
 alter table public.volunteer_submissions enable row level security;
 alter table public.donations enable row level security;

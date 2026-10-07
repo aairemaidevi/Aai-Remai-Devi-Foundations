@@ -2,7 +2,19 @@
 
 import { useState } from "react";
 import styles from "./About.module.css";
-import { supabase, supabaseConfigError } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/supabaseClient";
+
+function getSubmissionErrorMessage(error) {
+  if (error?.code === "42501") {
+    return "Supabase blocked this submission. Apply supabase/setup.sql in the Supabase SQL Editor to enable the form's insert policy.";
+  }
+
+  if (["42703", "PGRST204", "PGRST205"].includes(error?.code)) {
+    return "The Supabase table does not match the form yet. Apply the latest supabase/setup.sql in the Supabase SQL Editor.";
+  }
+
+  return "We could not save your details to Supabase. Your form is still here—please try submitting again.";
+}
 
 export default function About() {
   const [supportType, setSupportType] = useState("donation");
@@ -13,14 +25,6 @@ export default function About() {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const cause = String(formData.get("cause") || "");
-
-    if (!supabase) {
-      setSubmission({
-        type: "error",
-        message: supabaseConfigError,
-      });
-      return;
-    }
 
     setIsSubmitting(true);
     setSubmission(null);
@@ -46,18 +50,23 @@ export default function About() {
         const amountRupees = customAmount
           ? Number(customAmount)
           : Number(formData.get("amount"));
+        const amountPaise = amountRupees * 100;
         const frequency = String(formData.get("frequency") || "");
         const donor = {
           donor_name: String(formData.get("donorName") || "").trim(),
           donor_email: String(formData.get("donorEmail") || "").trim(),
           cause,
           frequency,
-          amount_rupees: amountRupees,
+          amount_paise: amountPaise,
           volunteer_updates: formData.get("volunteerUpdates") === "on",
           status: "pending",
         };
 
-        if (!Number.isSafeInteger(amountRupees) || amountRupees <= 0) {
+        if (
+          !Number.isSafeInteger(amountRupees) ||
+          amountRupees <= 0 ||
+          !Number.isSafeInteger(amountPaise)
+        ) {
           setSubmission({ type: "error", message: "Enter a valid donation amount in whole rupees." });
           return;
         }
@@ -74,7 +83,7 @@ export default function About() {
       console.error("Could not save the form submission:", error);
       setSubmission({
         type: "error",
-        message: "We could not save your details. Please try again in a moment.",
+        message: getSubmissionErrorMessage(error),
       });
     } finally {
       setIsSubmitting(false);
@@ -109,25 +118,23 @@ export default function About() {
           <p className={styles.cardText}>
             Choose a cause, give what you can, or join us as a volunteer.
           </p>
-          {submission ? (
+          {submission?.type === "success" ? (
             <div
               className={styles.successMessage}
-              role={submission.type === "error" ? "alert" : "status"}
+              role="status"
               aria-live="polite"
             >
-              {submission.type === "success" && (
-                <span className={styles.successMark} aria-hidden="true">&#10003;</span>
-              )}
-              <h4>{submission.type === "success" ? "Thank you" : "Unable to submit"}</h4>
+              <span className={styles.successMark} aria-hidden="true">&#10003;</span>
+              <h4>Thank you</h4>
               <p>{submission.message}</p>
-              {submission.type === "error" && (
-                <button type="button" className={`btn btn-navy ${styles.donate}`} onClick={() => setSubmission(null)}>
-                  Try again
-                </button>
-              )}
             </div>
           ) : (
           <form className={styles.form} onSubmit={handleSubmit}>
+            {submission?.type === "error" && (
+              <p className={styles.errorMessage} role="alert" aria-live="assertive">
+                {submission.message}
+              </p>
+            )}
             <label className={styles.label} htmlFor="cause">Choose your cause</label>
             <select className={styles.field} id="cause" name="cause" defaultValue="education">
               <option value="education">Education</option>

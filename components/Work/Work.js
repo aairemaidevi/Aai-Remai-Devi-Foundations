@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, X } from "lucide-react";
+import { getSiteImageUrl } from "@/lib/siteImages";
 import styles from "./Work.module.css";
 
 const PILLARS = [
@@ -42,7 +43,7 @@ const PILLARS = [
   {
     title: "Road Development",
     desc: "A long-awaited road to Aai Remai Devi Temple, completed through a community-focused CSR initiative.",
-    image: "/road-after.png",
+    image: getSiteImageUrl("OUR WORK/ROAD/ROAD.jpeg"),
     project: "road-development",
   },
   {

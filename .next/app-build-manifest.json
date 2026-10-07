@@ -15,16 +15,34 @@
       "static/css/76eaa7fd82d6c510.css",
       "static/chunks/app/layout-67fb19f231b83f15.js"
     ],
+    "/awards/page": [
+      "static/chunks/webpack-c24a4ca42f9a27c7.js",
+      "static/chunks/fd9d1056-a4fc1defb06d3e84.js",
+      "static/chunks/117-9bdd72b0aa2b5a7c.js",
+      "static/chunks/main-app-5e47f54cf3666235.js",
+      "static/css/27e829c6a944eab9.css",
+      "static/chunks/717-e4b991701e533a83.js",
+      "static/chunks/app/awards/page-a9be265471e323ca.js"
+    ],
+    "/awards/[slug]/page": [
+      "static/chunks/webpack-c24a4ca42f9a27c7.js",
+      "static/chunks/fd9d1056-a4fc1defb06d3e84.js",
+      "static/chunks/117-9bdd72b0aa2b5a7c.js",
+      "static/chunks/main-app-5e47f54cf3666235.js",
+      "static/css/27e829c6a944eab9.css",
+      "static/chunks/717-e4b991701e533a83.js",
+      "static/chunks/app/awards/[slug]/page-9e58db234a30a5f5.js"
+    ],
     "/page": [
       "static/chunks/webpack-c24a4ca42f9a27c7.js",
       "static/chunks/fd9d1056-a4fc1defb06d3e84.js",
       "static/chunks/117-9bdd72b0aa2b5a7c.js",
       "static/chunks/main-app-5e47f54cf3666235.js",
-      "static/css/598d96b8ad867b88.css",
+      "static/css/27e829c6a944eab9.css",
       "static/chunks/44530001-3bf1abf623554b3e.js",
       "static/chunks/717-e4b991701e533a83.js",
       "static/chunks/758-74597267b252a787.js",
-      "static/chunks/app/page-6a59bded739d5958.js"
+      "static/chunks/app/page-afde9a02c32b7eac.js"
     ],
     "/people/[slug]/page": [
       "static/chunks/webpack-c24a4ca42f9a27c7.js",
@@ -34,24 +52,6 @@
       "static/css/852c753457a26c78.css",
       "static/chunks/717-e4b991701e533a83.js",
       "static/chunks/app/people/[slug]/page-05b321131f2156d4.js"
-    ],
-    "/awards/[slug]/page": [
-      "static/chunks/webpack-c24a4ca42f9a27c7.js",
-      "static/chunks/fd9d1056-a4fc1defb06d3e84.js",
-      "static/chunks/117-9bdd72b0aa2b5a7c.js",
-      "static/chunks/main-app-5e47f54cf3666235.js",
-      "static/css/598d96b8ad867b88.css",
-      "static/chunks/717-e4b991701e533a83.js",
-      "static/chunks/app/awards/[slug]/page-9e58db234a30a5f5.js"
-    ],
-    "/awards/page": [
-      "static/chunks/webpack-c24a4ca42f9a27c7.js",
-      "static/chunks/fd9d1056-a4fc1defb06d3e84.js",
-      "static/chunks/117-9bdd72b0aa2b5a7c.js",
-      "static/chunks/main-app-5e47f54cf3666235.js",
-      "static/css/598d96b8ad867b88.css",
-      "static/chunks/717-e4b991701e533a83.js",
-      "static/chunks/app/awards/page-a9be265471e323ca.js"
     ]
   }
 }

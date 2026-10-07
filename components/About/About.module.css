@@ -309,6 +309,16 @@
   line-height: 1.5;
 }
 
+.errorMessage {
+  padding: 12px 14px;
+  border: 1px solid #e6b4ac;
+  border-radius: 10px;
+  background: #fff4f1;
+  color: #842b20;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 @media (max-width: 860px) {
   .layout {
     grid-template-columns: 1fr;
