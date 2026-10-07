@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import styles from "./About.module.css";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase, supabaseConfigError } from "@/lib/supabaseClient";
 
 export default function About() {
   const [supportType, setSupportType] = useState("donation");
@@ -17,7 +17,7 @@ export default function About() {
     if (!supabase) {
       setSubmission({
         type: "error",
-        message: "Supabase is not configured. Check the project URL and publishable key in .env.local.",
+        message: supabaseConfigError,
       });
       return;
     }

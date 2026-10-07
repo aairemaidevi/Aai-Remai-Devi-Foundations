@@ -80,9 +80,18 @@ Project Settings → API** for local development. Do not use a service-role key
 for either variable or commit real keys to the repository.
 
 For Vercel, add both variables under **Project → Settings → Environment
-Variables** for the Production environment (and Preview/Development if needed),
-then redeploy. `NEXT_PUBLIC_` values are included when Next.js builds the
-deployment, so adding them after a deployment requires a fresh deployment.
+Variables**. Enable **Production** for the live site, and **Preview** if you
+test preview deployments. After saving the variables, redeploy the
+corresponding environment: `NEXT_PUBLIC_` values are included in the browser
+bundle when Next.js builds, so changing them does not update an existing
+deployment. Use the Supabase publishable/anon key only; never use the
+service-role key in a `NEXT_PUBLIC_` variable.
+
+The volunteer and donation forms insert into `volunteer_submissions` and
+`donations`. Run [`supabase/setup.sql`](./supabase/setup.sql) in the Supabase
+SQL Editor if those tables or their public insert policies have not yet been
+created. The donation form saves a pending donation record; it does not collect
+payment.
 
 The awards gallery can still display the currently uploaded award photos when
 Vercel has no Supabase variables. Add both variables in Vercel to let the
