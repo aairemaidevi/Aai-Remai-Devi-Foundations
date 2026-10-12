@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { notFound } from "next/navigation";
+import MemberPortrait from "@/components/MemberPortrait";
 import { getCommitteeMember, committeeMembers } from "@/lib/committeeMembers";
 import styles from "./page.module.css";
 
@@ -25,7 +26,12 @@ export default function PersonPage({ params }) {
 
         <div className={styles.profile}>
           <div className={styles.photoPanel}>
-            <img className={styles.photo} src={member.image} alt={`${member.name} portrait`} />
+            <MemberPortrait
+              src={member.image}
+              alt={`${member.name} portrait`}
+              initials={member.initials}
+              className={styles.photo}
+            />
             <span className={styles.number}>{member.initials}</span>
           </div>
 
@@ -33,9 +39,11 @@ export default function PersonPage({ params }) {
             <span className={styles.eyebrow}>{member.institution || "Aai Ramai Social Institution"}</span>
             <p className={styles.sequence}>The people behind the promise</p>
             <h1>{member.name}</h1>
-            <p className={styles.designation}>
-              Designation: {member.role} <span aria-hidden="true">·</span> {member.marathiRole}
-            </p>
+            <div className={styles.designationBlock}>
+              <span className={styles.designationLabel}>Designation</span>
+              <p className={styles.designation}>{member.role}</p>
+              <p className={styles.marathiDesignation}>{member.marathiRole}</p>
+            </div>
             {member.marathiName && <p className={styles.marathiName}>{member.marathiName}</p>}
             <div className={styles.rule} />
             <div className={styles.copy}>

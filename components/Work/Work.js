@@ -41,7 +41,7 @@ const PILLARS = [
     ],
   },
   {
-    title: "Road Development",
+    title: "Rural Development",
     desc: "A long-awaited road to Aai Remai Devi Temple, completed through a community-focused CSR initiative.",
     image: getSiteImageUrl("OUR WORK/ROAD/ROAD.jpeg"),
     project: "road-development",
@@ -238,7 +238,7 @@ export default function Work() {
             <div>
               {selectedProject?.project ? (
                 <>
-                  <p className={styles.storyEyebrow}>Our work · Road development</p>
+                  <p className={styles.storyEyebrow}>Our work · Rural development</p>
                   <h2 className={styles.storyTitle} id="project-story-title">
                     A long-awaited road, completed together.
                   </h2>

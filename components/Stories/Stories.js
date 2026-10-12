@@ -22,7 +22,7 @@ export default function Stories() {
 
 				<div className={styles.memberGrid}>
 					{committeeMembers.map((member, index) => (
-						<Link href={`/people/${member.slug}`} className={`${styles.member} ${styles[`tone${index % 3}`]}`} key={member.role}>
+						<Link href={`/people/${member.slug}`} className={`${styles.member} ${styles[`tone${index % 3}`]}`} key={member.slug}>
 							<div className={styles.photoFrame}>
 								<img className={styles.photo} src={member.image} alt={`${member.name} committee portrait`} />
 								<div className={styles.number}>{member.initials}</div>

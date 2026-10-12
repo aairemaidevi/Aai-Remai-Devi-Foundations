@@ -87,15 +87,54 @@
   letter-spacing: -0.04em;
 }
 
-.designation {
+.designationBlock {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
   margin-top: 22px;
+  padding-left: 18px;
+  border-left: 3px solid var(--marigold);
+  background: rgba(232, 135, 30, 0.08);
+}
+
+.designationLabel {
+  display: block;
+  margin-bottom: 8px;
   color: var(--maroon);
+  font-family: var(--font-utility);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.designation {
+  margin: 0;
+  color: var(--maroon);
+  font-family: var(--font-utility);
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.marathiDesignation {
+  margin: 10px 0 0;
+  color: var(--navy);
+  font-family: var(--font-devanagari);
+  font-size: clamp(16px, 1.8vw, 24px);
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+.marathiName {
+  margin-top: 14px;
+  color: var(--navy);
   font-family: var(--font-devanagari);
   font-size: 18px;
   font-weight: 600;
 }
-
-.designation span { padding: 0 7px; color: var(--marigold); }
 
 .rule {
   width: 100%;

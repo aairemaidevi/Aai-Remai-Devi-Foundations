@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import styles from "./About.module.css";
 import { supabase } from "@/lib/supabaseClient";
 
@@ -41,9 +42,32 @@ export default function About() {
         const { error } = await supabase.from("volunteer_submissions").insert(volunteer);
 
         if (error) throw error;
+        let confirmationMessage = "Your volunteer registration has been saved.";
+
+        try {
+          const emailResponse = await fetch("/api/volunteer-confirmation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: volunteer.name,
+              email: volunteer.email,
+            }),
+          });
+          const emailResult = await emailResponse.json().catch(() => ({}));
+
+          if (!emailResponse.ok) {
+            confirmationMessage += ` ${emailResult.error || "We could not send the confirmation email right now."}`;
+          } else {
+            confirmationMessage += " A confirmation email has been sent to your inbox.";
+          }
+        } catch (emailError) {
+          console.error("Could not send the volunteer confirmation email:", emailError);
+          confirmationMessage += " We could not send the confirmation email right now.";
+        }
+
         setSubmission({
           type: "success",
-          message: `Thank you, ${volunteer.name}. Your volunteer form has been saved.`,
+          message: `Thank you, ${volunteer.name}. ${confirmationMessage}`,
         });
       } else {
         const customAmount = String(formData.get("customAmount") || "").trim();
@@ -94,9 +118,14 @@ export default function About() {
     <section className={styles.section} id="get-involved">
       <div className={`container ${styles.layout}`}>
         <div className={styles.mediaPanel}>
-          <video className={styles.media} autoPlay muted loop playsInline>
-            <source src="/TP.mp4" type="video/mp4" />
-          </video>
+          <Image
+            className={styles.media}
+            src="/3.jpeg"
+            alt="Foundation members celebrating their community work together"
+            fill
+            priority
+            sizes="(max-width: 860px) 100vw, 70vw"
+          />
           <div className={styles.mediaShade} />
           <div className={styles.mediaContent}>
             <span className={styles.mediaEyebrow}>आई रेमाई देवी</span>
@@ -107,6 +136,7 @@ export default function About() {
             </p>
             <div className={styles.pillarsRow}>
               <span>सेवा — Service</span>
+              <span>संस्कार  — Sanskar</span>
               <span>समर्पण — Dedication</span>
               <span>विकास — Development</span>
             </div>
