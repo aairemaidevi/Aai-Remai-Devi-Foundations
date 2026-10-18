@@ -1,0 +1,190 @@
+/*!*****************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[7].use[3]!./app/people/[slug]/page.module.css ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************/
+.page_page__YnrZJ {
+  min-height: 100vh;
+  padding: 44px 24px 80px;
+  background: var(--cream);
+}
+
+.page_shell__tD8IF {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.page_backLink__7ifhn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--navy);
+  font-family: var(--font-utility);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.page_backLink__7ifhn:hover { color: var(--marigold-deep); }
+
+.page_profile__CUVAn {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
+  grid-gap: clamp(42px, 8vw, 116px);
+  gap: clamp(42px, 8vw, 116px);
+  align-items: start;
+  margin-top: 58px;
+}
+
+.page_photoPanel__QD0G0 {
+  position: relative;
+  min-height: 560px;
+  overflow: hidden;
+  background: var(--navy-soft);
+}
+
+.page_photo__2NxNc {
+  width: 100%;
+  height: 100%;
+  min-height: 560px;
+  object-fit: cover;
+  filter: saturate(0.82);
+}
+
+.page_number__mATX4 {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border: 1px solid var(--marigold);
+  border-radius: 50%;
+  color: var(--marigold);
+  font-family: var(--font-utility);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.page_message__eOxTh { padding-top: 18px; }
+
+.page_eyebrow__xnH_v {
+  color: var(--marigold-deep);
+  font-family: var(--font-utility);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.page_sequence__b8ErI {
+  margin-top: 18px;
+  color: var(--leaf-deep);
+  font-family: var(--font-utility);
+  font-size: 13px;
+  letter-spacing: 0.03em;
+}
+
+.page_message__eOxTh h1 {
+  max-width: 12ch;
+  margin-top: 14px;
+  font-size: clamp(42px, 6vw, 78px);
+  letter-spacing: -0.04em;
+}
+
+.page_designationBlock__dWi_B {
+  display: block;
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 22px;
+  padding-left: 18px;
+  border-left: 3px solid var(--marigold);
+  background: rgba(232, 135, 30, 0.08);
+}
+
+.page_designationLabel__4kN_g {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--maroon);
+  font-family: var(--font-utility);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.page_designation__epDAh {
+  margin: 0;
+  color: var(--maroon);
+  font-family: var(--font-utility);
+  font-size: clamp(18px, 2vw, 26px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.page_marathiDesignation__OpO_j {
+  margin: 10px 0 0;
+  color: var(--navy);
+  font-family: var(--font-devanagari);
+  font-size: clamp(16px, 1.8vw, 24px);
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+.page_marathiName__SotGO {
+  margin-top: 14px;
+  color: var(--navy);
+  font-family: var(--font-devanagari);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.page_rule__PxhTo {
+  width: 100%;
+  height: 1px;
+  margin: 34px 0 30px;
+  background: rgba(15, 27, 61, 0.2);
+}
+
+.page_copy__gSfPh {
+  max-width: 66ch;
+  color: rgba(36, 29, 18, 0.82);
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+.page_copy__gSfPh p + p { margin-top: 20px; }
+
+.page_profileNav__nX0Dg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin-top: 64px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(15, 27, 61, 0.18);
+}
+
+.page_profileNav__nX0Dg a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--navy);
+  font-family: var(--font-utility);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.page_profileNav__nX0Dg a:hover,
+.page_profileNav__nX0Dg .page_active__Ac53n { color: var(--marigold-deep); }
+
+@media (max-width: 720px) {
+  .page_page__YnrZJ { padding: 28px 20px 56px; }
+  .page_profile__CUVAn { grid-template-columns: 1fr; gap: 34px; margin-top: 40px; }
+  .page_photoPanel__QD0G0, .page_photo__2NxNc { min-height: 390px; }
+  .page_message__eOxTh { padding-top: 0; }
+  .page_message__eOxTh h1 { max-width: 15ch; }
+  .page_copy__gSfPh { font-size: 16px; }
+}

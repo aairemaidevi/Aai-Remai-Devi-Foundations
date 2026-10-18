@@ -1,0 +1,2574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RC TRACK Portal - Enterprise Governance</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- SheetJS: lets Bulk Upload read .xlsx / .xls files (CSV works without it) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    /* CSS Variables & Core Theme Resets for Dynamic Portal */
+    :root {
+      --primary: #0A3981;
+      --primary-light: #0066FF;
+      --bg-light: #EEF4FB;
+      --text-dark: #1E293B;
+      --text-muted: #64748B;
+      --border-light: #E2E8F0;
+      --rcu-purple: #7C3AED;
+      --rcu-purple-text: #6B21A8;
+    }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg-light); color: var(--text-dark); }
+    .screen-container { display: none; }
+    .screen-container.active { display: block; }
+    .portal-header { background: #fff; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .portal-logo-area { display: flex; align-items: center; gap: 10px; }
+    .portal-logo-icon { width: 36px; height: 36px; background: #0066FF; color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    .portal-title { font-size: 1.15rem; font-weight: 800; color: #0A3981; }
+    .portal-nav { display: flex; gap: 20px; }
+    .portal-nav a { text-decoration: none; color: var(--text-muted); font-size: 0.85rem; font-weight: 600; padding: 6px 12px; border-radius: 4px; transition: all 0.2s; }
+    .portal-nav a:hover, .portal-nav a.active { background: #EBF5FF; color: #0066FF; }
+    .portal-user-meta { display: flex; align-items: center; gap: 12px; font-size: 0.82rem; font-weight: 600; }
+    .avatar-badge { width: 32px; height: 32px; background: #0A3981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; }
+    .main-body { padding: 20px 28px; max-width: 1440px; margin: 0 auto; }
+    
+    /* Grid & Cards Styling */
+    .product-pending-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+    .product-pending-card { background: white; padding: 18px; border-radius: 10px; border-top: 4px solid #0066FF; box-shadow: 0 4px 12px rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center; transition: transform 0.2s; }
+    .product-pending-card:hover { transform: translateY(-2px); }
+    .p-val { font-size: 1.8rem; font-weight: 800; color: #0A3981; margin: 4px 0; }
+    
+    .intake-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+    .intake-box { background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #0066FF; box-shadow: 0 2px 8px rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+    
+    .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 20px; }
+    .kpi-box { background: white; padding: 14px; border-radius: 8px; border-left: 4px solid #0066FF; box-shadow: 0 2px 6px rgba(0,0,0,0.02); cursor: pointer; }
+    .kpi-header { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+    .kpi-value { font-size: 1.5rem; font-weight: 800; color: #0A3981; margin: 6px 0; }
+    .kpi-trend { font-size: 0.68rem; font-weight: 600; }
+    .kpi-trend.green { color: #059669; } .kpi-trend.orange { color: #D97706; } .kpi-trend.red { color: #DC2626; } .kpi-trend.purple { color: #7C3AED; }
+
+    .master-channel-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+    .master-channel-tab { background: white; padding: 16px; border-radius: 8px; border: 1px solid var(--border-light); cursor: pointer; transition: all 0.2s; }
+    .master-channel-tab.active { border-color: #0066FF; background: #F8FAFC; box-shadow: 0 4px 12px rgba(0,102,255,0.08); }
+    [role="button"]:focus-visible { outline: 3px solid #2563EB; outline-offset: 3px; }
+    .channel-title { font-size: 0.85rem; font-weight: 800; color: #0A3981; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .channel-volume { font-size: 1.4rem; font-weight: 800; color: #1E293B; margin-bottom: 6px; }
+    .channel-breakup-mini { font-size: 0.72rem; color: var(--text-muted); }
+    .overdue-case-count { padding: 0; border: 0; background: transparent; color: #DC2626; font: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+    .overdue-case-count:focus-visible { outline: 2px solid #DC2626; outline-offset: 3px; border-radius: 2px; }
+    .overdue-popup-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left; }
+    .overdue-popup-table th, .overdue-popup-table td { padding: 9px 10px; border-bottom: 1px solid #E2E8F0; white-space: nowrap; }
+    .overdue-popup-table th { position: sticky; top: 0; background: #F8FAFC; color: #334155; }
+    @media (max-width: 760px) { .overdue-popup-table { min-width: 900px; } }
+    .content-box { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-light); margin-bottom: 20px; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; text-align: left; }
+    .data-table th { background: #F8FAFC; color: #334155; font-weight: 700; padding: 10px 12px; border-bottom: 2px solid #E2E8F0; }
+    .data-table td { padding: 10px 12px; border-bottom: 1px solid #F1F5F9; }
+    .input-field { width: 100%; padding: 6px 10px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 0.78rem; background: #fff; box-sizing: border-box; }
+    
+    .badge { padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+    .badge-verified { background: #D1FAE5; color: #059669; }
+    .badge-warning { background: #FEF3C7; color: #D97706; }
+    .badge-rcu { background: #F3E8FF; color: #6B21A8; }
+    .badge-on-track { background: #E0F2FE; color: #0369A1; }
+
+    .btn-action { background: #0066FF; color: white; border: none; padding: 6px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background 0.2s; }
+    .btn-action:hover { opacity: 0.9; }
+    .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .telecalling-verification-bar { background: linear-gradient(135deg, #0A3981 0%, #1555c4 100%); color: white; border-radius: 10px; padding: 18px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(10,57,129,0.15); }
+    .verification-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-top: 12px; }
+    .verification-field { background: rgba(255,255,255,0.1); padding: 8px 10px; border-radius: 6px; }
+    .verification-field .label { font-size: 0.68rem; color: #93C5FD; font-weight: 600; margin-bottom: 2px; display: flex; align-items: center; gap: 4px; }
+    .verification-field .val { font-size: 0.82rem; font-weight: 700; color: #fff; }
+
+    .part-panel { background: white; border-radius: 10px; border: 1px solid var(--border-light); margin-bottom: 20px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .part-header { background: #F8FAFC; padding: 12px 18px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
+    .stage-section-card { border: 1px solid #E2E8F0; border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+    .stage-header-bar { background: #F8FAFC; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #E2E8F0; }
+    .btn-stage-save { background: #059669; color: white; border: none; padding: 4px 10px; border-radius: 4px; font-size: 0.72rem; font-weight: 600; cursor: pointer; }
+
+    #hover-preview-card { position: fixed; display: none; background: white; border: 1px solid #CBD5E1; border-radius: 6px; padding: 10px; width: 240px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 2000; pointer-events: none; }
+
+    /* ---- Add Case / Bulk Upload ---- */
+    .queue-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; gap: 12px; flex-wrap: wrap; }
+    .queue-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .modal-overlay { display: none; position: fixed; inset: 0; z-index: 1800; padding: 16px; background: rgba(15,23,42,0.55); justify-content: center; align-items: center; }
+    .modal-card { background: #fff; width: min(100%, 860px); max-height: 90vh; overflow: hidden; border-radius: 10px; box-shadow: 0 18px 45px rgba(15,23,42,0.25); display: flex; flex-direction: column; }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--border-light); }
+    .modal-head h3 { margin: 0; color: #0A3981; font-size: 1.05rem; }
+    .modal-close { border: 0; background: transparent; color: #64748B; font-size: 1.6rem; cursor: pointer; line-height: 1; }
+    .modal-body { padding: 18px; overflow: auto; }
+    .modal-foot { padding: 12px 18px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 8px; background: #F8FAFC; }
+    .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .form-grid label { font-size: 0.73rem; font-weight: 700; color: #0A3981; display: block; margin-bottom: 4px; }
+    .form-grid .req::after { content: " *"; color: #DC2626; }
+    .field-error { color: #DC2626; font-size: 0.7rem; margin-top: 3px; min-height: 12px; }
+    .input-field.invalid { border-color: #DC2626; background: #FEF2F2; }
+    .btn-light { background: white; color: var(--text-dark); border: 1px solid var(--border-light); }
+    .upload-drop { border: 2px dashed #93C5FD; background: #F0F7FF; border-radius: 10px; padding: 22px; text-align: center; }
+    .upload-drop.dragover { background: #DBEAFE; border-color: #0066FF; }
+    .upload-summary { display: flex; gap: 10px; margin: 14px 0 10px; flex-wrap: wrap; }
+    .upload-summary .pill { padding: 6px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; }
+    .pill-total { background: #E0F2FE; color: #0369A1; }
+    .pill-ok { background: #D1FAE5; color: #047857; }
+    .pill-bad { background: #FEE2E2; color: #B91C1C; }
+    .preview-wrap { max-height: 260px; overflow: auto; border: 1px solid var(--border-light); border-radius: 6px; }
+    .preview-table { width: 100%; border-collapse: collapse; font-size: 0.74rem; }
+    .preview-table th, .preview-table td { padding: 6px 8px; border-bottom: 1px solid #E2E8F0; text-align: left; white-space: nowrap; }
+    .preview-table th { position: sticky; top: 0; background: #F1F5F9; }
+    .preview-table tr.row-bad td { background: #FEF2F2; }
+    #toast-box { position: fixed; right: 20px; bottom: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 8px; }
+    .toast { background: #065F46; color: #fff; padding: 10px 16px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+    .toast.error { background: #991B1B; }
+    @media (max-width: 760px) { .form-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <!-- Hover Preview Tooltip -->
+  <div id="hover-preview-card">
+    <div style="font-weight: 700; font-size: 0.8rem; color: #0A3981; border-bottom: 1px solid var(--border-light); padding-bottom: 4px; margin-bottom: 6px;" id="hover-title">Stage Cases Preview</div>
+    <div style="font-size: 0.72rem; color: var(--text-dark);" id="hover-content">Loading...</div>
+    <div style="font-size: 0.68rem; color: #0066FF; margin-top: 6px; font-weight: 600;">(Click count to open dedicated case queue)</div>
+  </div>
+
+  <div id="toast-box" aria-live="polite"></div>
+
+  <!-- SCREEN 1: LOGIN -->
+  <div id="screen-1" class="screen-container active">
+    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #EEF4FB; padding: 20px;">
+      <div style="display: flex; width: 860px; height: 520px; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+        <div style="flex: 1; background: linear-gradient(145deg, #2b77f4 0%, #1555c4 100%); color: white; padding: 40px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="font-size: 2.2rem; font-weight: 800; margin-top: 130px; line-height: 1.15;">RC Pending<br>Tracking</div>
+            <p style="margin-top: 10px; font-size: 0.95rem; opacity: 0.9;">Multi-Channel & ZCM/RCM Governance</p>
+          </div>
+          <div style="font-size: 0.75rem; opacity: 0.7;">RC TRACK Enterprise Core Engine</div>
+        </div>
+        <div style="flex: 1.1; padding: 40px 48px; display: flex; flex-direction: column; justify-content: center;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px;">
+            <i class="fa-solid fa-shield-halved" style="font-size: 1.5rem; color: #0A3981;"></i>
+            <span style="font-size: 1.25rem; font-weight: 800; color: #0A3981;">RC TRACK</span>
+          </div>
+          <h2 style="font-size: 1.5rem; font-weight: 700; color: #1E293B; margin-bottom: 4px;">Welcome Back</h2>
+          <p style="font-size: 0.8rem; color: #64748B; margin-bottom: 20px;">Sign in to your RC Pending Tracking Portal account</p>
+          <form onsubmit="event.preventDefault(); switchScreen('screen-2');">
+            <div style="margin-bottom: 12px;">
+              <label style="font-size: 0.75rem; font-weight: 600; color: #334155; display: block; margin-bottom: 4px;">Employee ID</label>
+              <input type="text" class="input-field" value="EMP-882910">
+            </div>
+            <div style="margin-bottom: 12px;">
+              <label style="font-size: 0.75rem; font-weight: 600; color: #334155; display: block; margin-bottom: 4px;">Password</label>
+              <input type="password" class="input-field" value="••••••••••••">
+            </div>
+            <div style="margin-bottom: 18px;">
+              <label style="font-size: 0.75rem; font-weight: 600; color: #334155; display: block; margin-bottom: 4px;">OTP</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" class="input-field" value="849201">
+                <button type="button" style="background: none; border: none; color: #0066FF; font-size: 0.75rem; font-weight: 600; cursor: pointer;">Send OTP</button>
+              </div>
+            </div>
+            <button type="submit" style="width: 100%; background: #0066FF; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: 600; font-size: 0.9rem; cursor: pointer;">Login to Portal</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: DASHBOARD -->
+  <div id="screen-2" class="screen-container">
+    <header class="portal-header">
+      <div class="portal-logo-area">
+        <div class="portal-logo-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <span class="portal-title">RC TRACK Portal</span>
+      </div>
+      <nav class="portal-nav" aria-label="Portal navigation">
+        <a href="#dashboard" data-screen="screen-2" class="active" onclick="switchScreen('screen-2')">Dashboard</a>
+        <a href="#cases" data-screen="screen-3" onclick="switchScreen('screen-3')">Cases Queue</a>
+        <a href="#disposition" data-screen="screen-4" onclick="switchScreen('screen-4')">Split Disposition</a>
+        <a href="#reviewer" data-screen="screen-5" onclick="switchScreen('screen-5')">Reviewer</a>
+        <a href="#reports" data-screen="screen-6" onclick="switchScreen('screen-6')">Reports</a>
+      </nav>
+      <div class="portal-user-meta">
+        <i class="fa-regular fa-bell" style="font-size: 1.1rem; cursor: pointer;"></i>
+        <i class="fa-solid fa-gear" style="font-size: 1.1rem; cursor: pointer;"></i>
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span>Admin • Enterprise Central</span>
+          <div class="avatar-badge">AD</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="main-body">
+      <!-- Product-Wise Pending Active Pipeline -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h3 style="font-size: 1.1rem; font-weight: 800; color: #0A3981;"><i class="fa-solid fa-layer-group"></i> Product-Wise Pending Active Pipeline (<span id="dash-total-pipeline-count">471</span> Cases)</h3>
+        <span style="font-size: 0.75rem; color: var(--text-muted);">Current Active RC Pipeline (Ref Date: 11-Oct-2026)</span>
+      </div>
+
+      <div class="product-pending-grid">
+        <div class="product-pending-card" style="border-top-color: #0A3981; cursor: pointer;" onclick="openProductModal('Commercial Vehicle')">
+          <div>
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Commercial Vehicle</div>
+            <div class="p-val" id="count-cv">195</div>
+            <div style="font-size: 0.7rem; color: #DC2626; font-weight: 600;" id="sub-cv">18 Overdue • 115 In-Calling</div>
+          </div>
+          <i class="fa-solid fa-truck" style="font-size: 2.2rem; color: #93C5FD;"></i>
+        </div>
+
+        <div class="product-pending-card" style="border-top-color: #0066FF; cursor: pointer;" onclick="openProductModal('Car (Passenger)')">
+          <div>
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Car (Passenger)</div>
+            <div class="p-val" id="count-car">142</div>
+            <div style="font-size: 0.7rem; color: #DC2626; font-weight: 600;" id="sub-car">12 Overdue • 85 In-Calling</div>
+          </div>
+          <i class="fa-solid fa-car" style="font-size: 2.2rem; color: #93C5FD;"></i>
+        </div>
+
+        <div class="product-pending-card" style="border-top-color: #D97706; cursor: pointer;" onclick="openProductModal('Tractor (Agri)')">
+          <div>
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Tractor (Agri)</div>
+            <div class="p-val" id="count-tractor">78</div>
+            <div style="font-size: 0.7rem; color: #DC2626; font-weight: 600;" id="sub-tractor">7 Overdue • 51 In-Calling</div>
+          </div>
+          <i class="fa-solid fa-tractor" style="font-size: 2.2rem; color: #FCD34D;"></i>
+        </div>
+
+        <div class="product-pending-card" style="border-top-color: #7C3AED; cursor: pointer;" onclick="openProductModal('Construction Equip')">
+          <div>
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">Construction Equip</div>
+            <div class="p-val" id="count-ce">56</div>
+            <div style="font-size: 0.7rem; color: #DC2626; font-weight: 600;" id="sub-ce">4 Overdue • 38 In-Calling</div>
+          </div>
+          <i class="fa-solid fa-trowel-bricks" style="font-size: 2.2rem; color: #DDD6FE;"></i>
+        </div>
+      </div>
+
+      <!-- Product Modal Popup Container -->
+      <div id="productDetailModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: #fff; width: 90%; max-width: 1000px; max-height: 85vh; border-radius: 8px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow-y: auto; position: relative;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; padding-bottom: 12px; margin-bottom: 15px;">
+            <h3 id="modalTitle" style="font-size: 1.2rem; font-weight: 800; color: #0A3981; margin: 0;">Product Details</h3>
+            <button onclick="closeProductModal()" style="background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: #6b7280;">&times;</button>
+          </div>
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.825rem;">
+              <thead>
+                <tr style="background-color: #f8fafc; border-bottom: 2px solid #e2e8f0; color: #334155;">
+                  <th style="padding: 10px; font-weight: 700;">Loan Number</th>
+                  <th style="padding: 10px; font-weight: 700;">Customer Name</th>
+                  <th style="padding: 10px; font-weight: 700;">Product</th>
+                  <th style="padding: 10px; font-weight: 700;">Asset Make & Model</th>
+                  <th style="padding: 10px; font-weight: 700;">RCM In-Charge</th>
+                  <th style="padding: 10px; font-weight: 700;">Source Segment</th>
+                  <th style="padding: 10px; font-weight: 700;">BCM Confirmation</th>
+                  <th style="padding: 10px; font-weight: 700;">Current Stage</th>
+                  <th style="padding: 10px; font-weight: 700;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="modalTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overall Portfolio & Flow Summary -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <h3 style="font-size: 1.05rem; font-weight: 800; color: #0A3981;"><i class="fa-solid fa-chart-pie"></i> Overall Portfolio & Flow Summary</h3>
+        <button class="btn-action" style="background: #0066FF;" onclick="switchScreen('screen-6')"><i class="fa-solid fa-chart-line"></i> View PAN-India RCMs Report</button>
+      </div>
+
+      <div class="intake-grid">
+        <div class="intake-box" role="button" tabindex="0" aria-label="Filter tracker for fresh cases inflow" style="border-left-color: #0066FF;" onclick="filterDashboardTracker('fresh')" onkeydown="activateDashboardTracker(event, 'fresh')">
+          <div>
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">1. Fresh Cases Inflow</div>
+            <div style="font-size: 1.6rem; font-weight: 800; color: #0A3981;" id="dash-fresh-count">142</div>
+            <div style="font-size: 0.7rem; color: #059669; font-weight: 600;">Intake-stage cases — Click to view</div>
+          </div>
+          <i class="fa-solid fa-cloud-arrow-down" style="font-size: 2rem; color: #93C5FD;"></i>
+        </div>
+        <div class="intake-box" role="button" tabindex="0" aria-label="Filter tracker for credit first-level checks pending" style="border-left-color: #F59E0B;" onclick="filterDashboardTracker('credit')" onkeydown="activateDashboardTracker(event, 'credit')">
+          <div>
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">2. Credit First-Level Check Pending</div>
+            <div style="font-size: 1.6rem; font-weight: 800; color: #B45309;" id="dash-credit-count">48</div>
+            <div style="font-size: 0.7rem; color: #B45309; font-weight: 600;">BCM Case-Type classification pending — Click to view</div>
+          </div>
+          <i class="fa-solid fa-user-check" style="font-size: 2rem; color: #FDE68A;"></i>
+        </div>
+        <div class="intake-box" role="button" tabindex="0" aria-label="Filter tracker for caller first-level checks pending" style="border-left-color: #10B981;" onclick="filterDashboardTracker('caller')" onkeydown="activateDashboardTracker(event, 'caller')">
+          <div>
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">3. Caller First-Level Check Pending</div>
+            <div style="font-size: 1.6rem; font-weight: 800; color: #065F46;" id="dash-caller-count">94</div>
+            <div style="font-size: 0.7rem; color: #065F46; font-weight: 600;">Active in telecaller queues — Click to view</div>
+          </div>
+          <i class="fa-solid fa-headset" style="font-size: 2rem; color: #A7F3D0;"></i>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-box" role="button" tabindex="0" aria-label="Filter tracker for total portfolio" onclick="filterDashboardTracker('portfolio')" onkeydown="activateDashboardTracker(event, 'portfolio')">
+          <div class="kpi-header"><i class="fa-regular fa-folder-open" style="color: #0066FF;"></i> Total Portfolio MTD</div>
+          <div class="kpi-value" id="kpi-total-portfolio">780</div>
+          <div class="kpi-trend green">Reconciled Enterprise Total</div>
+        </div>
+        <div class="kpi-box" role="button" tabindex="0" aria-label="Filter tracker for active pipeline" style="border-left: 4px solid #D97706;" onclick="filterDashboardTracker('pipeline')" onkeydown="activateDashboardTracker(event, 'pipeline')">
+          <div class="kpi-header"><i class="fa-solid fa-hourglass-half" style="color: #D97706;"></i> Active Pipeline</div>
+          <div class="kpi-value" style="color: #0A3981;" id="kpi-active-pipeline">471</div>
+          <div class="kpi-trend orange">Across 3 Master Channels</div>
+        </div>
+        <div class="kpi-box" role="button" tabindex="0" aria-label="Filter tracker for overdue cases" style="border-left: 4px solid #DC2626;" onclick="filterDashboardTracker('overdue')" onkeydown="activateDashboardTracker(event, 'overdue')">
+          <div class="kpi-header"><i class="fa-regular fa-clock" style="color: #DC2626;"></i> Overdue Triggers</div>
+          <div class="kpi-value" style="color: #DC2626;" id="kpi-overdue-count">41</div>
+          <div class="kpi-trend red">SLA Breached Cases</div>
+        </div>
+        <div class="kpi-box" role="button" tabindex="0" aria-label="Filter tracker for closed and updated cases" style="border-left: 4px solid #059669;" onclick="filterDashboardTracker('closed')" onkeydown="activateDashboardTracker(event, 'closed')">
+          <div class="kpi-header"><i class="fa-regular fa-circle-check" style="color: #059669;"></i> Closed & Updated</div>
+          <div class="kpi-value" style="color: #059669;" id="kpi-closed-count">309</div>
+          <div class="kpi-trend green">Post Vahan Verified Passed</div>
+        </div>
+        <div class="kpi-box" style="border-left: 4px solid var(--rcu-purple); background: #FAF5FF; cursor: pointer;" onclick="switchScreen('screen-5')">
+          <div class="kpi-header" style="color: var(--rcu-purple-text);"><i class="fa-solid fa-triangle-exclamation" style="color: var(--rcu-purple);"></i> Vahan Discrepancies</div>
+          <div class="kpi-value" style="color: var(--rcu-purple);" id="kpi-discrepancy-count">11</div>
+          <div class="kpi-trend purple" style="font-weight: 700;">Open Reviewer Screen (ZCM/RCM) →</div>
+        </div>
+      </div>
+
+      <!-- Master Channel Tabs -->
+      <div class="master-channel-tabs">
+        <div class="master-channel-tab" id="tab-corp" onclick="filterChannel('Corporate DSA')">
+          <div class="channel-title">
+            <span><i class="fa-solid fa-building"></i> 1. Corporate DSA Cases</span>
+            <span class="badge badge-warning">14 Overdue</span>
+          </div>
+          <div class="channel-volume" id="vol-corp">134 <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Active Cases</span></div>
+          <div class="channel-breakup-mini"><span><strong>0–7d:</strong> 42</span> • <span><strong>8–14d:</strong> 51</span> • <span><strong>15–30d:</strong> 28</span> • <span style="color: #DC2626;"><strong>30+d:</strong> 13</span></div>
+        </div>
+        <div class="master-channel-tab active" id="tab-retail" onclick="filterChannel('Retail DSA')">
+          <div class="channel-title">
+            <span><i class="fa-solid fa-store"></i> 2. Retail DSA Cases</span>
+            <span class="badge badge-warning">23 Overdue</span>
+          </div>
+          <div class="channel-volume" id="vol-retail">248 <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Active Cases</span></div>
+          <div class="channel-breakup-mini"><span><strong>0–7d:</strong> 22</span> • <span><strong>8–14d:</strong> 26</span> • <span><strong>15–30d:</strong> 14</span> • <span style="color: #DC2626;"><strong>30+d:</strong> 5</span></div>
+        </div>
+        <div class="master-channel-tab" id="tab-branch" onclick="filterChannel('Branch RC Limit')">
+          <div class="channel-title">
+            <span><i class="fa-solid fa-code-branch"></i> 3. Branch RC Limit Cases</span>
+            <span class="badge badge-on-track">4 Overdue</span>
+          </div>
+          <div class="channel-volume" id="vol-branch">89 <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">Active Cases</span></div>
+          <div class="channel-breakup-mini"><span><strong>0–7d:</strong> 35</span> • <span><strong>8–14d:</strong> 31</span> • <span><strong>15–30d:</strong> 17</span> • <span style="color: #DC2626;"><strong>30+d:</strong> 6</span></div>
+        </div>
+      </div>
+
+      <!-- Trigger Stage Summary Tracker Table -->
+      <div class="content-box">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: 10px; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 28px; height: 28px; background: #0066FF; color: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">
+              <i class="fa-solid fa-crosshairs"></i>
+            </div>
+            <div>
+              <h3 id="current-tracker-title" style="font-size: 1rem; font-weight: 800; color: #0A3981;">Retail DSA RC Limit — Trigger Stage Summary Tracker</h3>
+              <p style="font-size: 0.72rem; color: var(--text-muted);">Click any pending count to open dynamic case queue</p>
+            </div>
+          </div>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Trigger Stage</th>
+              <th>Due Date (from Disb Date)</th>
+              <th>Overdue Days</th>
+              <th>Total Count</th>
+              <th style="background: #EBF5FF; color: #0A3981;">Pending Count (Clickable)</th>
+              <th>Vahan Discrepancy Flag</th>
+              <th>Channel SLA Status</th>
+            </tr>
+          </thead>
+          <tbody id="tracker-table-body">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="overdueCasesModal" role="dialog" aria-modal="true" aria-labelledby="overdue-modal-title" style="display:none; position:fixed; inset:0; z-index:1600; padding:16px; background:rgba(15,23,42,0.55); justify-content:center; align-items:center;" onclick="if(event.target===this)closeOverdueCasesPopup()" onkeydown="if(event.key==='Escape')closeOverdueCasesPopup()">
+    <section style="background:#fff; width:min(100%,1100px); max-height:82vh; overflow:hidden; border-radius:10px; padding:16px; box-shadow:0 18px 45px rgba(15,23,42,0.25); display:flex; flex-direction:column;">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; border-bottom:1px solid var(--border-light); padding-bottom:10px; margin-bottom:12px;">
+        <div>
+          <h3 id="overdue-modal-title" style="margin:0; color:#0A3981; font-size:1rem;">Overdue Cases</h3>
+          <p id="overdue-modal-count" style="margin:4px 0 0; color:var(--text-muted); font-size:0.76rem;"></p>
+        </div>
+        <button type="button" aria-label="Close overdue cases" onclick="closeOverdueCasesPopup()" style="border:0; background:transparent; color:#64748B; font-size:1.5rem; cursor:pointer; line-height:1;">&times;</button>
+      </div>
+      <div style="overflow:auto;">
+        <table class="overdue-popup-table">
+          <thead>
+            <tr>
+              <th>Loan Number</th>
+              <th>Customer Name</th>
+              <th>Product</th>
+              <th>Asset Make &amp; Model</th>
+              <th>RCM In-Charge</th>
+              <th>Source Segment</th>
+              <th>BCM Confirmation</th>
+              <th>Current Stage</th>
+            </tr>
+          </thead>
+          <tbody id="overdue-cases-popup-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- SCREEN 3: CASES QUEUE -->
+  <div id="screen-3" class="screen-container">
+    <header class="portal-header">
+      <div class="portal-logo-area">
+        <div class="portal-logo-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <span class="portal-title">RC TRACK Portal</span>
+      </div>
+      <nav class="portal-nav" aria-label="Portal navigation">
+        <a href="#dashboard" data-screen="screen-2" onclick="switchScreen('screen-2')">Dashboard</a>
+        <a href="#cases" data-screen="screen-3" class="active" onclick="switchScreen('screen-3')">Cases Queue</a>
+        <a href="#disposition" data-screen="screen-4" onclick="switchScreen('screen-4')">Split Disposition</a>
+        <a href="#reviewer" data-screen="screen-5" onclick="switchScreen('screen-5')">Reviewer</a>
+        <a href="#reports" data-screen="screen-6" onclick="switchScreen('screen-6')">Reports</a>
+      </nav>
+      <div class="portal-user-meta">
+        <div class="avatar-badge">RK</div>
+        <span>Rahul Kumar (Admin)</span>
+      </div>
+    </header>
+
+    <div class="main-body">
+      <div class="queue-toolbar">
+        <h2 style="font-size: 1.4rem; font-weight: 800; color: #0A3981; margin: 0;" id="cases-queue-heading">Master Cases Queue (Active Pipeline)</h2>
+        <div class="queue-actions">
+          <input type="text" id="queue-search" class="input-field" placeholder="Search Loan No or Customer..." style="width: 220px;" oninput="renderCasesQueue()">
+          <button class="btn-action" style="background: #059669;" onclick="openAddCaseModal()"><i class="fa-solid fa-plus"></i> Add Case</button>
+          <button class="btn-action" style="background: #0A3981;" onclick="openBulkUploadModal()"><i class="fa-solid fa-file-arrow-up"></i> Bulk Upload</button>
+          <button class="btn-action" style="background: white; color: var(--rcu-purple); border: 1px solid var(--rcu-purple);" onclick="switchScreen('screen-5')"><i class="fa-solid fa-shield-virus"></i> View Discrepancies</button>
+          <button class="btn-action" style="background: white; color: var(--text-dark); border: 1px solid var(--border-light);" onclick="exportQueueCSV()"><i class="fa-solid fa-download"></i> Export CSV</button>
+        </div>
+      </div>
+
+      <div class="content-box" style="padding: 0; overflow-x: auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Loan Number</th>
+              <th>Customer Name</th>
+              <th>Product</th>
+              <th>Asset Make & Model</th>
+              <th>RCM In-Charge</th>
+              <th>Source Segment</th>
+              <th>BCM Confirmation</th>
+              <th>Current Stage</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="cases-queue-tbody">
+            <!-- Dynamically populated from complete dataset -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD CASE MODAL -->
+  <div id="addCaseModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="add-case-title" onclick="if(event.target===this)closeAddCaseModal()" onkeydown="if(event.key==='Escape')closeAddCaseModal()">
+    <section class="modal-card">
+      <div class="modal-head">
+        <h3 id="add-case-title"><i class="fa-solid fa-circle-plus"></i> Add New Case</h3>
+        <button type="button" class="modal-close" aria-label="Close add case" onclick="closeAddCaseModal()">&times;</button>
+      </div>
+      <form id="addCaseForm" novalidate onsubmit="event.preventDefault(); submitAddCase();">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div>
+              <label class="req" for="ac-loan">Loan Number (LAN)</label>
+              <input type="text" id="ac-loan" class="input-field" placeholder="e.g. RC/2026/83001 (blank = auto)">
+              <div class="field-error" id="err-ac-loan"></div>
+            </div>
+            <div>
+              <label class="req" for="ac-customer">Customer Name</label>
+              <input type="text" id="ac-customer" class="input-field" placeholder="Customer / entity name">
+              <div class="field-error" id="err-ac-customer"></div>
+            </div>
+            <div>
+              <label for="ac-phone">Contact Number</label>
+              <input type="text" id="ac-phone" class="input-field" placeholder="10-digit mobile">
+              <div class="field-error" id="err-ac-phone"></div>
+            </div>
+            <div>
+              <label class="req" for="ac-product">Product</label>
+              <select id="ac-product" class="input-field"></select>
+            </div>
+            <div>
+              <label for="ac-model">Asset Make &amp; Model</label>
+              <input type="text" id="ac-model" class="input-field" placeholder="e.g. Tata 407 Gold SFC">
+            </div>
+            <div>
+              <label for="ac-engine">Engine / Chassis No.</label>
+              <input type="text" id="ac-engine" class="input-field" placeholder="e.g. ENG: 4SPCR99281">
+            </div>
+            <div>
+              <label class="req" for="ac-rcm">RCM In-Charge (Region / State)</label>
+              <select id="ac-rcm" class="input-field"></select>
+            </div>
+            <div>
+              <label class="req" for="ac-source">Source Segment</label>
+              <select id="ac-source" class="input-field"></select>
+            </div>
+            <div>
+              <label for="ac-amount">Loan Amount (₹)</label>
+              <input type="text" id="ac-amount" class="input-field" placeholder="e.g. 750000">
+              <div class="field-error" id="err-ac-amount"></div>
+            </div>
+            <div>
+              <label for="ac-bcm">BCM Confirmation</label>
+              <select id="ac-bcm" class="input-field">
+                <option value="BCM Pending">BCM Pending</option>
+                <option value="Confirmed by BCM">Confirmed by BCM</option>
+              </select>
+            </div>
+            <div>
+              <label for="ac-stage">Current Stage</label>
+              <select id="ac-stage" class="input-field"></select>
+            </div>
+            <div style="display:flex; align-items:flex-end;">
+              <label style="display:flex; align-items:center; gap:6px; font-size:0.78rem; margin-bottom:6px;">
+                <input type="checkbox" id="ac-overdue"> Mark as Overdue (SLA breached)
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button type="button" class="btn-action btn-light" onclick="closeAddCaseModal()">Cancel</button>
+          <button type="submit" class="btn-action" style="background:#059669;"><i class="fa-solid fa-floppy-disk"></i> Save Case</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <!-- BULK UPLOAD MODAL -->
+  <div id="bulkUploadModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="bulk-title" onclick="if(event.target===this)closeBulkUploadModal()" onkeydown="if(event.key==='Escape')closeBulkUploadModal()">
+    <section class="modal-card" style="width:min(100%,1000px);">
+      <div class="modal-head">
+        <h3 id="bulk-title"><i class="fa-solid fa-file-arrow-up"></i> Bulk Upload Cases</h3>
+        <button type="button" class="modal-close" aria-label="Close bulk upload" onclick="closeBulkUploadModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="upload-drop" id="bulk-drop">
+          <i class="fa-solid fa-cloud-arrow-up" style="font-size:2rem; color:#0066FF;"></i>
+          <p style="margin:8px 0 4px; font-weight:700; color:#0A3981;">Choose a CSV or Excel (.xlsx) file, or drag it here</p>
+          <p style="margin:0 0 12px; font-size:0.75rem; color:var(--text-muted);">Required columns: Loan Number, Customer Name, Product, RCM In-Charge. Max 5,000 rows.</p>
+          <input type="file" id="bulk-file" accept=".csv,.xlsx,.xls" style="display:none;" onchange="handleBulkFile(this.files[0])">
+          <button type="button" class="btn-action" onclick="document.getElementById('bulk-file').click()"><i class="fa-solid fa-folder-open"></i> Select File</button>
+          <button type="button" class="btn-action btn-light" onclick="downloadBulkTemplate()"><i class="fa-solid fa-download"></i> Download Template</button>
+          <div id="bulk-file-name" style="margin-top:10px; font-size:0.76rem; color:#334155; font-weight:600;"></div>
+        </div>
+
+        <div id="bulk-result" style="display:none;">
+          <div class="upload-summary">
+            <span class="pill pill-total" id="bulk-pill-total"></span>
+            <span class="pill pill-ok" id="bulk-pill-ok"></span>
+            <span class="pill pill-bad" id="bulk-pill-bad"></span>
+          </div>
+          <div class="preview-wrap">
+            <table class="preview-table">
+              <thead>
+                <tr><th>Row</th><th>Loan Number</th><th>Customer</th><th>Product</th><th>RCM</th><th>Source</th><th>Stage</th><th>Result</th></tr>
+              </thead>
+              <tbody id="bulk-preview-body"></tbody>
+            </table>
+          </div>
+          <p style="font-size:0.72rem; color:var(--text-muted); margin:8px 0 0;">Only valid rows are imported. Rows with errors are skipped — fix them in your file and upload again.</p>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn-action btn-light" onclick="closeBulkUploadModal()">Cancel</button>
+        <button type="button" class="btn-action" id="bulk-import-btn" style="background:#059669;" disabled onclick="confirmBulkImport()"><i class="fa-solid fa-check"></i> Import Valid Cases</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- SCREEN 4: SPLIT DISPOSITION / TELECALLING DOCK -->
+  <div id="screen-4" class="screen-container">
+    <header class="portal-header">
+      <div class="portal-logo-area">
+        <div class="portal-logo-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <span class="portal-title">RC TRACK Portal</span>
+        <span class="portal-tag" style="background:#E0F2FE; color:#0369A1; padding:2px 8px; border-radius:4px; font-size:0.72rem; font-weight:700;">CALL DISPOSITION</span>
+      </div>
+      <nav class="portal-nav" aria-label="Portal navigation">
+        <a href="#dashboard" data-screen="screen-2" onclick="switchScreen('screen-2')">Dashboard</a>
+        <a href="#cases" data-screen="screen-3" onclick="switchScreen('screen-3')">Cases Queue</a>
+        <a href="#disposition" data-screen="screen-4" class="active" onclick="switchScreen('screen-4')">Split Disposition</a>
+        <a href="#reviewer" data-screen="screen-5" onclick="switchScreen('screen-5')">Reviewer</a>
+        <a href="#reports" data-screen="screen-6" onclick="switchScreen('screen-6')">Reports</a>
+      </nav>
+      <div class="portal-user-meta">
+        <div class="avatar-badge">RS</div>
+        <span>Operator: Rahul Sharma | Active Case: <strong id="header-active-lan">RC/2026/81245</strong></span>
+      </div>
+    </header>
+
+    <div class="main-body">
+      <!-- Live Call Dock -->
+      <div class="telecalling-verification-bar">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px;">
+          <div style="font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-headset" style="font-size: 1rem; color: #93C5FD;"></i>
+            <span id="dock-title-rcm">LIVE CALL DOCK — ASSIGNED RCM: VIKAS GUPTA (NORTH)</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <span id="dock-lan-badge" style="background: rgba(255,255,255,0.2); font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">LAN: RC/2026/81245</span>
+            <span id="case-status-dock" style="background: #D97706; color: white; font-size: 0.72rem; padding: 2px 8px; border-radius: 4px; font-weight: 700;">Status: Pending (Stage 3)</span>
+          </div>
+        </div>
+
+        <div class="verification-grid">
+          <div class="verification-field">
+            <div class="label"><i class="fa-solid fa-user"></i> Customer Name</div>
+            <div class="val" id="dock-customer">Ankit Sharma</div>
+          </div>
+          <div class="verification-field">
+            <div class="label"><i class="fa-solid fa-phone"></i> Contact Number</div>
+            <div class="val" id="dock-phone">+91 98765 43210</div>
+          </div>
+          <div class="verification-field">
+            <div class="label"><i class="fa-solid fa-indian-rupee-sign"></i> Loan Sanctioned</div>
+            <div class="val" style="color: #6EE7B7;" id="dock-amount">₹ 7,50,000</div>
+          </div>
+          <div class="verification-field">
+            <div class="label"><i class="fa-solid fa-handshake"></i> DSA Source</div>
+            <div class="val" id="dock-source">Premier Wheels DSA</div>
+          </div>
+          <div class="verification-field">
+            <div class="label"><i class="fa-solid fa-truck"></i> Product & Model</div>
+            <div class="val" id="dock-product-model">Commercial Vehicle - Tata 407</div>
+          </div>
+          <div class="verification-field">
+            <div class="label"><i class="fa-solid fa-id-card"></i> Engine / Chassis</div>
+            <div class="val" style="font-size: 0.78rem;" id="dock-engine">ENG: 4SPCR99281...</div>
+          </div>
+          <div class="verification-field" style="background: rgba(255, 255, 255, 0.18);">
+            <div class="label" style="color: #93C5FD;"><i class="fa-solid fa-user-tie"></i> Governing RCM</div>
+            <div class="val" style="font-size: 0.82rem; color: #FFFFFF;" id="dock-rcm">Vikas Gupta (North)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 1: BCM Case Classification -->
+      <div class="part-panel part-bcm">
+        <div class="part-header">
+          <span style="font-size: 0.9rem; font-weight: 700;"><i class="fa-solid fa-user-shield"></i> PART 1: Branch Credit Manager (BCM) — Case Classification</span>
+          <span id="bcm-badge" class="badge" style="background:#FEF3C7; color:#92400E;">Level-1 Verification Pending</span>
+        </div>
+        <div style="padding: 16px; background: #FAF5FF;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1.5fr auto; gap: 12px; align-items: flex-end;">
+            <div>
+              <label style="font-size: 0.75rem; font-weight: 700; color: #0A3981;">Confirm Case Type *</label>
+              <select id="bcm-case-type" class="input-field" style="font-weight: 600;">
+                <option value="Re-purchase">Re-purchase</option>
+                <option value="Re-finance">Re-finance</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 0.75rem; font-weight: 700; color: #0A3981;">Confirm Sub-Type *</label>
+              <select id="bcm-sub-type" class="input-field" style="font-weight: 600;">
+                <option value="Financed Asset">Financed Asset</option>
+                <option value="Free Asset">Free Asset</option>
+                <option value="Inter State Transfer">Inter State Transfer</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 0.75rem; font-weight: 700; color: #0A3981;">Credit Concurrence Remarks *</label>
+              <input type="text" id="bcm-remarks" class="input-field" value="Documents vetted against invoice. Approved for telecalling outreach.">
+            </div>
+            <button class="btn-action" style="background: #0A3981; height: 32px;" onclick="confirmBcmSave()">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i> Confirm & Push to Caller
+            </button>
+          </div>
+          <div id="bcm-flow-msg" style="display: none; margin-top: 8px; font-size: 0.75rem; color: #059669; font-weight: 700;">
+            ✓ Case Type confirmed by BCM. File successfully routed to Telecaller Queue.
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 2: Telecaller Outreach & Stages -->
+      <div class="part-panel part-tele">
+        <div class="part-header">
+          <span style="font-size: 0.9rem; font-weight: 700;"><i class="fa-solid fa-headset"></i> PART 2: Telecaller Outreach & Operational Follow-up Stages</span>
+          <span id="caller-badge" class="badge badge-warning">Calling In-Progress</span>
+        </div>
+        <div style="padding: 16px;">
+          
+          <!-- Stage Cards -->
+          <div class="stage-section-card">
+            <div class="stage-header-bar">
+              <span style="font-size: 0.84rem; font-weight: 700; color: #0A3981;">Stage 1: Vehicle Delivered Verification (Day 7)</span>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span id="stg1-badge" class="badge badge-warning">Action Required</span>
+                <button class="btn-stage-save" onclick="saveStageItem(1)">Save Stage</button>
+              </div>
+            </div>
+            <div style="padding: 10px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+              <div><label style="font-size: 0.72rem; font-weight: 600;">Delivery Status</label><select id="stg1-status" class="input-field"><option>Delivered to Customer</option><option>Pending</option><option>Not Applicable</option></select></div>
+              <div><label style="font-size: 0.72rem; font-weight: 600;">Delivery Date</label><input type="date" id="stg1-date" class="input-field" value="2026-08-16"></div>
+              <div><label style="font-size: 0.72rem; font-weight: 600;">Remarks</label><input type="text" id="stg1-remarks" class="input-field" value="Physical asset delivery verified."></div>
+            </div>
+          </div>
+
+          <div class="stage-section-card">
+            <div class="stage-header-bar">
+              <span style="font-size: 0.84rem; font-weight: 700; color: #0A3981;">Stage 2: Financer Payment Done by DSA (Day 7)</span>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span id="stg2-badge" class="badge badge-warning">Action Required</span>
+                <button class="btn-stage-save" onclick="saveStageItem(2)">Save Stage</button>
+              </div>
+            </div>
+            <div style="padding: 10px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+              <div><label style="font-size: 0.72rem; font-weight: 600;">Payment Done by DSA</label><select id="stg2-status" class="input-field"><option>Yes</option><option>No</option></select></div>
+              <div><label style="font-size: 0.72rem; font-weight: 600;">UTR Reference Number</label><input type="text" id="stg2-utr" class="input-field" value="UTR9928104829"></div>
+              <div><label style="font-size: 0.72rem; font-weight: 600;">Payment Date</label><input type="date" id="stg2-date" class="input-field" value="2026-08-18"></div>
+            </div>
+          </div>
+
+          <div class="stage-section-card">
+            <div class="stage-header-bar">
+              <span style="font-size: 0.84rem; font-weight: 700; color: #0A3981;">Stage 3: Customer Margin Payment (Day 7)</span>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span id="stg3-badge" class="badge badge-warning">Action Required</span>
+                <button class="btn-stage-save" onclick="saveStageItem(3)">Save Stage</button>
+              </div>
+            </div>
+            <div style="padding: 10px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+              <div><label style="font-size: 0.72rem; font-weight: 600;">Customer Margin Status</label><select id="stg3-status" class="input-field"><option>Partial Received</option><option>Full Received</option><option>Done By DSA</option></select></div>
+              <div><label style="font-size: 0.72rem; font-weight: 600;">PTP Callback Date</label><input type="date" id="stg3-ptp" class="input-field" value="2026-10-15"></div>
+              <div><label style="font-size: 0.72rem; font-weight: 600;">Notes</label><input type="text" id="stg3-notes" class="input-field" value="Customer promised remaining margin balance."></div>
+            </div>
+          </div>
+
+          <!-- Stage 6: Vahan API Check -->
+          <div class="stage-section-card" style="border: 2px solid #0066FF;">
+            <div class="stage-header-bar" style="background: #EBF5FF;">
+              <span style="font-size: 0.88rem; font-weight: 800; color: #0A3981;"><i class="fa-solid fa-shield-halved"></i> Stage 6: Final Vahan API Check & Closure Status</span>
+              <span id="vahan-closure-tag" class="badge badge-warning">System Status: Open / Pending Verification</span>
+            </div>
+            <div style="padding: 14px; background: #FFFFFF;">
+              <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px;">
+                <strong>Governance Rule:</strong> The case will remain in pending status until Vahan check returns Clean and is confirmed below.
+              </p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: flex-end;">
+                <div>
+                  <label style="font-size: 0.72rem; font-weight: 700;">Registration No on Portal</label>
+                  <input type="text" id="vahan-reg-no" class="input-field" value="UP-16-AB-9821">
+                </div>
+                <div>
+                  <label style="font-size: 0.72rem; font-weight: 700;">Vahan Live API Result *</label>
+                  <select id="vahan-api-selector" class="input-field" style="font-weight: 700;">
+                    <option value="CLEAN">Passed Clean (Hypo & Engine Match)</option>
+                    <option value="MISMATCH">Discrepancy (Route to RCU Review Screen)</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size: 0.72rem; font-weight: 700;">Hypothecation Endorsed Bank</label>
+                  <input type="text" id="vahan-bank" class="input-field" value="HDB Financial Services Ltd">
+                </div>
+                <button class="btn-action" style="background: #059669; height: 32px;" onclick="executeVahanClosure()">
+                  <i class="fa-solid fa-lock"></i> Verify & Update Vahan
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Final Disposition & Remarks -->
+          <div class="stage-section-card" style="border: 2px solid #0A3981; margin-top: 16px;">
+            <div class="stage-header-bar" style="background: #0A3981; color: white;">
+              <span style="font-size: 0.88rem; font-weight: 800;"><i class="fa-solid fa-comments"></i> Caller Final Disposition & Interaction Remarks Screen</span>
+              <span class="badge badge-on-track">Final Comments Active</span>
+            </div>
+            <div style="padding: 16px; background: #F8FAFC;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                <div>
+                  <label style="font-size: 0.75rem; font-weight: 700;">Final Call Disposition *</label>
+                  <select id="final-disposition-select" class="input-field" style="font-weight: 600;">
+                    <option>Contacted - Customer Committed to Complete</option>
+                    <option>Contacted - Followup Required</option>
+                    <option>Unreachable / Switch Off</option>
+                    <option>Escalated to DSA Head</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size: 0.75rem; font-weight: 700;">Next Action / PTP Date</label>
+                  <input type="date" id="final-ptp-date" class="input-field" value="2026-10-15">
+                </div>
+                <div>
+                  <label style="font-size: 0.75rem; font-weight: 700;">Escalation Desk (if required)</label>
+                  <select id="final-escalation" class="input-field">
+                    <option>None (Normal Followup)</option>
+                    <option>Branch Credit Manager (BCM)</option>
+                    <option>Regional Credit Manager (RCM)</option>
+                    <option>Legal & Asset Recovery</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label style="font-size: 0.75rem; font-weight: 700; color: #0A3981; display: block; margin-bottom: 4px;">
+                  Telecaller Free Text Detailed Interaction Comments *
+                </label>
+                <textarea id="caller-final-comments" class="input-field" rows="3" placeholder="Enter complete telecaller conversation notes..."></textarea>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px;">
+                <button type="button" class="btn-action" style="background: #475569; font-size: 0.75rem; padding: 6px 12px;" onclick="toggleRemarkHistory()">
+                  <i class="fa-solid fa-clock-rotate-left"></i> <span id="history-toggle-text">Show Remark History</span>
+                </button>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span id="caller-comment-saved-msg" style="font-size: 0.75rem; color: #059669; font-weight: 700; display: none;">
+                    ✓ Remarks successfully logged against active case!
+                  </span>
+                  <button class="btn-action" style="background: #0A3981;" onclick="submitCallerFinalComments()">
+                    <i class="fa-solid fa-floppy-disk"></i> Submit & Save Telecaller Remarks
+                  </button>
+                </div>
+              </div>
+
+              <!-- History Container -->
+              <div id="remark-history-container" style="display: none; margin-top: 16px; border-top: 2px dashed #CBD5E1; padding-top: 16px;">
+                <label style="font-size: 0.8rem; font-weight: 800; color: #0A3981; display: block; margin-bottom: 8px;">
+                  <i class="fa-solid fa-history"></i> Previous Interaction & Remark History
+                </label>
+                <div style="border: 1px solid #CBD5E1; border-radius: 6px; background: #FFFFFF; overflow: hidden;">
+                  <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left;">
+                    <thead>
+                      <tr style="background: #E2E8F0; color: #334155;">
+                        <th style="padding: 8px;">Caller Info</th>
+                        <th style="padding: 8px;">Date & Time</th>
+                        <th style="padding: 8px;">Disposition & PTP</th>
+                        <th style="padding: 8px;">Detailed Notes</th>
+                      </tr>
+                    </thead>
+                    <tbody id="dynamic-history-tbody">
+                      <!-- Dynamically populated -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px;">
+        <button class="btn-action" style="background: white; color: var(--text-dark); border: 1px solid var(--border-light);" onclick="switchScreen('screen-3')">Back to Queue</button>
+        <button class="btn-action" style="background: #0066FF;" onclick="loadNextCaseInQueue()">Next Case →</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCREEN 5: REVIEWER SCREEN (ZCM/RCM) -->
+  <div id="screen-5" class="screen-container">
+    <header class="portal-header">
+      <div class="portal-logo-area">
+        <div class="portal-logo-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <span class="portal-title">RC TRACK Portal</span>
+        <span class="portal-tag" style="background: var(--rcu-purple); color:white; padding:2px 8px; border-radius:4px; font-size:0.72rem; font-weight:700;">SUPERVISORY REVIEW</span>
+      </div>
+      <nav class="portal-nav" aria-label="Portal navigation">
+        <a href="#dashboard" data-screen="screen-2" onclick="switchScreen('screen-2')">Dashboard</a>
+        <a href="#cases" data-screen="screen-3" onclick="switchScreen('screen-3')">Cases Queue</a>
+        <a href="#disposition" data-screen="screen-4" onclick="switchScreen('screen-4')">Split Disposition</a>
+        <a href="#reviewer" data-screen="screen-5" class="active" onclick="switchScreen('screen-5')">Reviewer</a>
+        <a href="#reports" data-screen="screen-6" onclick="switchScreen('screen-6')">Reports</a>
+      </nav>
+      <div class="portal-user-meta">
+        <div class="avatar-badge" style="background: var(--rcu-purple);">RC</div>
+        <span>Reviewer: <strong>Vikas Gupta (RCM)</strong> / Zonal Head</span>
+      </div>
+    </header>
+
+    <div class="main-body">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+        <div>
+          <h2 style="font-size: 1.4rem; font-weight: 800; color: #0A3981;">Reviewer Screen — RCU Discrepancy Case Review (ZCM / RCM)</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">All system and Vahan discrepancy cases pending supervisory review and RCU initiation.</p>
+        </div>
+        <div>
+          <span class="badge badge-rcu" style="font-size: 0.8rem; padding: 6px 12px;"><i class="fa-solid fa-triangle-exclamation"></i> <span id="active-discrepancy-badge-count">11</span> Active Discrepancies</span>
+        </div>
+      </div>
+
+      <!-- Active Review Item Box -->
+      <div class="content-box" style="border: 2px solid var(--rcu-purple); background: #FAF5FF;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #DDD6FE; padding-bottom: 10px; margin-bottom: 12px;">
+          <div style="font-size: 0.95rem; font-weight: 800; color: var(--rcu-purple-text);" id="review-active-title">
+            <i class="fa-solid fa-user-check"></i> Case Under Review: RC/2026/81132 (Customer: Rohit Verma)
+          </div>
+          <span class="badge badge-warning" style="background: #FEE2E2; color: #991B1B;" id="review-active-discrepancy-tag">Discrepancy: Engine Serial Mismatch</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px; font-size: 0.8rem;">
+          <div><span style="color: var(--text-muted);">Product:</span> <strong id="rev-product">Car (Passenger) - Brezza ZXI</strong></div>
+          <div><span style="color: var(--text-muted);">Loan Amount:</span> <strong id="rev-amount">₹ 4,50,000</strong></div>
+          <div><span style="color: var(--text-muted);">DSA Partner:</span> <strong id="rev-dsa">Auto Hub India (Retail)</strong></div>
+          <div><span style="color: var(--text-muted);">Branch:</span> <strong id="rev-branch">South Ext Delhi (North)</strong></div>
+        </div>
+
+        <div style="background: white; border: 1px solid #DDD6FE; border-radius: 6px; padding: 12px; margin-bottom: 14px;">
+          <div style="font-size: 0.75rem; font-weight: 700; color: #DC2626; margin-bottom: 4px;">Automated Vahan API Mismatch Findings:</div>
+          <p style="font-size: 0.75rem; color: #1E293B;" id="rev-finding-desc">
+            Core system engine number recorded as <strong>EN: K15C9921</strong>, whereas Ministry of Road Transport Vahan API returned <strong>EN: K15C9988</strong>. Chassis number matches.
+          </p>
+        </div>
+
+        <div style="background: white; border: 1px solid var(--border-light); border-radius: 6px; padding: 14px;">
+          <h4 style="font-size: 0.85rem; font-weight: 800; color: #0A3981; margin-bottom: 10px;">
+            <i class="fa-solid fa-gavel"></i> ZCM / RCM Supervisory Audit Decision
+          </h4>
+          <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 14px; margin-bottom: 12px;">
+            <div>
+              <label style="font-size: 0.75rem; font-weight: 700; color: #0A3981;">RCU Verification Decision *</label>
+              <select id="rcm-rcu-decision" class="input-field" style="font-weight: 700; margin-top: 4px;">
+                <option value="INITIATE">Initiate Case to RCU Verification</option>
+                <option value="NOT_REQUIRED">RCU Not Required (Accept & Waive)</option>
+                <option value="RC Needed Rectification">RC Needed Rectification</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 0.75rem; font-weight: 700; color: #0A3981;">ZCM / RCM Final Audit Comment (Free Text) *</label>
+              <input type="text" id="rcm-free-comment" class="input-field" style="margin-top: 4px;" placeholder="Enter supervisory concurrence justification...">
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-light); padding-top: 10px;">
+            <span id="rcm-decision-msg" style="font-size: 0.75rem; color: #059669; font-weight: 700; display: none;">
+              ✓ RCM supervisory audit determination successfully recorded!
+            </span>
+            <button class="btn-action" style="background: var(--rcu-purple); margin-left: auto;" onclick="submitRcmDecision()">
+              <i class="fa-solid fa-stamp"></i> Submit RCM / ZCM Concurrence
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Discrepancy Queue Table -->
+      <div class="content-box" style="padding: 0; overflow-x: auto;">
+        <div style="padding: 12px 16px; background: #F8FAFC; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center;">
+          <h4 style="font-size: 0.95rem; font-weight: 800; color: #0A3981;"><i class="fa-solid fa-list-check"></i> Discrepancy Portfolio Queue (<span id="discrepancy-total-count">11</span> Total Cases)</h4>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Flagged records across North, West, South & East</span>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Loan Number</th>
+              <th>Customer Name</th>
+              <th>Product</th>
+              <th>RCM In-Charge</th>
+              <th>Discrepancy Category</th>
+              <th>Discrepancy Detail</th>
+              <th>RCU Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="discrepancy-queue-tbody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 6: REPORTS & MIS -->
+  <div id="screen-6" class="screen-container">
+    <header class="portal-header">
+      <div class="portal-logo-area">
+        <div class="portal-logo-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <span class="portal-title">RC TRACK Portal</span>
+      </div>
+      <nav class="portal-nav" aria-label="Portal navigation">
+        <a href="#dashboard" data-screen="screen-2" onclick="switchScreen('screen-2')">Dashboard</a>
+        <a href="#cases" data-screen="screen-3" onclick="switchScreen('screen-3')">Cases Queue</a>
+        <a href="#disposition" data-screen="screen-4" onclick="switchScreen('screen-4')">Split Disposition</a>
+        <a href="#reviewer" data-screen="screen-5" onclick="switchScreen('screen-5')">Reviewer</a>
+        <a href="#reports" data-screen="screen-6" class="active" onclick="switchScreen('screen-6')">Reports</a>
+      </nav>
+      <div class="portal-user-meta">
+        <div class="avatar-badge">HQ</div>
+        <span>National Head - Risk & Operations</span>
+      </div>
+    </header>
+
+    <div class="main-body">
+      <!-- Filter Bar & Download Header -->
+      <div style="background: #F8FAFC; padding: 14px 16px; border-radius: 8px; border: 1px solid #E2E8F0; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+          <div>
+            <h2 style="font-size: 1.4rem; font-weight: 800; color: #0A3981; margin: 0;">PAN-India Regional Credit Managers (RCMs) Performance MIS</h2>
+            <p id="mis-subtitle" style="font-size: 0.8rem; color: #64748B; margin-top: 2px; margin-bottom: 0;">Multi-Product Portfolio Governance</p>
+          </div>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <button class="btn-action" style="background: white; color: #166534; border: 1px solid #BBF7D0; padding: 6px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.8rem;" onclick="triggerFilteredDownload('State-wise')">
+              <i class="fa-solid fa-file-excel"></i> State-wise CSV (Excel)
+            </button>
+            <button class="btn-action" style="background: white; color: #166534; border: 1px solid #BBF7D0; padding: 6px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.8rem;" onclick="triggerFilteredDownload('Region-wise')">
+              <i class="fa-solid fa-file-excel"></i> Region-wise CSV (Excel)
+            </button>
+            <button class="btn-action" style="background: white; color: #0A3981; border: 1px solid #93C5FD; padding: 6px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.8rem;" onclick="triggerFilteredDownload('RCM-wise')">
+              <i class="fa-solid fa-file-excel"></i> RCM-wise Data (CSV)
+            </button>
+            <button class="btn-action" style="background: white; color: #991B1B; border: 1px solid #FECDD3; padding: 6px 12px; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 0.8rem;" onclick="triggerFilteredDownload('PDF Comprehensive')">
+              <i class="fa-solid fa-file-pdf"></i> Export PDF
+            </button>
+          </div>
+        </div>
+
+        <!-- Dynamic Filter Dropdowns -->
+        <div style="display: flex; gap: 12px; align-items: center; background: white; padding: 10px; border-radius: 6px; border: 1px solid #E2E8F0; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <label style="font-size: 0.75rem; font-weight: 700; color: #334155;"><i class="fa-solid fa-filter" style="color: #0066FF;"></i> Filter Region:</label>
+            <select id="filter-region" onchange="renderMISReportTable()" style="padding: 4px 8px; font-size: 0.78rem; border-radius: 4px; border: 1px solid #CBD5E1; color: #1E293B; font-weight: 600;">
+              <option value="ALL">All Regions</option>
+              <option value="North">North</option>
+              <option value="West">West</option>
+              <option value="South">South</option>
+              <option value="East">East</option>
+            </select>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <label style="font-size: 0.75rem; font-weight: 700; color: #334155;">Filter State:</label>
+            <select id="filter-state" onchange="renderMISReportTable()" style="padding: 4px 8px; font-size: 0.78rem; border-radius: 4px; border: 1px solid #CBD5E1; color: #1E293B; font-weight: 600;">
+              <option value="ALL">All States</option>
+              <option value="Delhi NCR">Delhi NCR</option>
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Maharashtra">Maharashtra</option>
+              <option value="Gujarat">Gujarat</option>
+              <option value="Karnataka">Karnataka</option>
+              <option value="Tamil Nadu">Tamil Nadu</option>
+              <option value="West Bengal & East">West Bengal & East</option>
+            </select>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <label style="font-size: 0.75rem; font-weight: 700; color: #334155;">Filter RCM:</label>
+            <select id="filter-rcm" onchange="renderMISReportTable()" style="padding: 4px 8px; font-size: 0.78rem; border-radius: 4px; border: 1px solid #CBD5E1; color: #1E293B; font-weight: 600;">
+              <option value="ALL">All RCMs</option>
+              <option value="Vikas Gupta (RCM)">Vikas Gupta (RCM)</option>
+              <option value="Sunil Rao (RCM)">Sunil Rao (RCM)</option>
+              <option value="Suresh Nair (RCM)">Suresh Nair (RCM)</option>
+              <option value="Ananya Roy (RCM)">Ananya Roy (RCM)</option>
+              <option value="Amit Shah (RCM)">Amit Shah (RCM)</option>
+            </select>
+          </div>
+          <button onclick="resetMISFilters()" style="margin-left: auto; background: #F1F5F9; color: #475569; border: 1px solid #CBD5E1; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
+            <i class="fa-solid fa-rotate-left"></i> Reset Selection
+          </button>
+        </div>
+      </div>
+
+      <!-- Performance Table -->
+      <div class="content-box" style="padding: 0; overflow-x: auto; background: white; border-radius: 6px; border: 1px solid #E2E8F0;">
+        <div style="padding: 12px 16px; background: #F8FAFC; border-bottom: 1px solid #E2E8F0; display: flex; justify-content: space-between; align-items: center;">
+          <h4 style="font-size: 0.95rem; font-weight: 800; color: #0A3981; margin: 0;"><i class="fa-solid fa-sitemap"></i> Regional & RCM Performance Matrix</h4>
+          <span id="mis-total-cases" style="font-size: 0.75rem; color: #64748B;">Live Cases Rollup</span>
+        </div>
+        <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: left;">
+          <thead>
+            <tr style="background: #F1F5F9; color: #334155; border-bottom: 2px solid #CBD5E1;">
+              <th style="padding: 10px 12px;">Region</th>
+              <th style="padding: 10px 12px;">State</th>
+              <th style="padding: 10px 12px;">Regional Credit Manager (RCM)</th>
+              <th style="padding: 10px 12px;">Total Cases</th>
+              <th style="padding: 10px 12px;">Active Pipeline</th>
+              <th style="padding: 10px 12px;">Closed (Vahan Passed)</th>
+              <th style="padding: 10px 12px;">Overdue Cases</th>
+              <th style="padding: 10px 12px;">Vahan Clean</th>
+              <th style="padding: 10px 12px; background: #FAF5FF; color: #6B21A8;">Vahan Discrepancy (RCU)</th>
+              <th style="padding: 10px 12px;">Completion %</th>
+            </tr>
+          </thead>
+          <tbody id="mis-matrix-tbody">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Application Logic & Master Dataset Engine -->
+  <script>
+    // --- MASTER DATASET ENGINE (100+ Realistic Cases) ---
+    const defaultMasterCases = [
+      { loanNo: "RC/2026/81245", customer: "Ankit Sharma", product: "Commercial Vehicle", model: "Tata 407 Gold SFC", rcm: "Vikas Gupta (RCM)", region: "North", state: "Delhi NCR", source: "Retail DSA", bcm: "Confirmed by BCM", stage: "Stage 3: Customer Payment", overdue: true, amount: "₹ 7,50,000", phone: "+91 98765 43210", engine: "ENG: 4SPCR99281", status: "Active", discrepancy: false, history: [{caller: "Rahul Verma", date: "05-Oct-2026", disp: "Followup Required", notes: "Requested 5-day extension."}] },
+      { loanNo: "RC/2026/81300", customer: "Ramesh Transport", product: "Commercial Vehicle", model: "Ashok Leyland Dost", rcm: "Vikas Gupta (RCM)", region: "North", state: "Delhi NCR", source: "Direct Sales", bcm: "Confirmed by BCM", stage: "Stage 2: Document Verification", overdue: false, amount: "₹ 8,20,000", phone: "+91 98111 22334", engine: "ENG: AL992831", status: "Active", discrepancy: false, history: [] },
+      { loanNo: "RC/2026/81132", customer: "Rohit Verma", product: "Car (Passenger)", model: "Brezza ZXI", rcm: "Vikas Gupta (RCM)", region: "North", state: "Delhi NCR", source: "Retail DSA", bcm: "Confirmed by BCM", stage: "Stage 6: Final Vahan Check", overdue: true, amount: "₹ 4,50,000", phone: "+91 99887 76655", engine: "ENG: K15C9921", status: "Flagged", discrepancy: true, discrepancyType: "Engine Mismatch", finding: "Core system EN: K15C9921 vs Vahan API EN: K15C9988", history: [] },
+      { loanNo: "RC/2026/65412", customer: "Priya Verma", product: "Car (Passenger)", model: "Maruti Swift ZXi", rcm: "Amit Shah (RCM)", region: "North", state: "Delhi NCR", source: "Dealer Network", bcm: "Confirmed by BCM", stage: "Stage 2: Verification", overdue: false, amount: "₹ 6,10,000", phone: "+91 97654 32109", engine: "ENG: SW99812", status: "Active", discrepancy: false, history: [] },
+      { loanNo: "RC/2026/65499", customer: "Rajesh Mehta", product: "Car (Passenger)", model: "Hyundai Creta", rcm: "Amit Shah (RCM)", region: "North", state: "Delhi NCR", source: "Retail DSA", bcm: "BCM Pending", stage: "Stage 1: Intake", overdue: false, amount: "₹ 11,50,000", phone: "+91 98222 33445", engine: "ENG: CR77812", status: "Active", discrepancy: false, history: [] },
+      { loanNo: "RC/2026/77821", customer: "Suresh Menon", product: "Tractor (Agri)", model: "Mahindra 575 DI", rcm: "Suresh Nair (RCM)", region: "South", state: "Karnataka", source: "Branch RC Limit", bcm: "BCM Pending", stage: "Stage 1: Intake", overdue: true, amount: "₹ 5,80,000", phone: "+91 94433 22110", engine: "ENG: MH57591", status: "Active", discrepancy: false, history: [] },
+      { loanNo: "RC/2026/77855", customer: "Ramesh Patel", product: "Tractor (Agri)", model: "Swaraj 744 FE", rcm: "Suresh Nair (RCM)", region: "South", state: "Karnataka", source: "Direct Sales", bcm: "Confirmed by BCM", stage: "Stage 3: Customer Payment", overdue: false, amount: "₹ 6,40,000", phone: "+91 98440 11223", engine: "ENG: SW74412", status: "Active", discrepancy: false, history: [] },
+      { loanNo: "RC/2026/90214", customer: "Vikram Logistics", product: "Construction Equip", model: "JCB 3DX Plus Backhoe", rcm: "Sunil Rao (RCM)", region: "West", state: "Maharashtra", source: "Corporate DSA", bcm: "Confirmed by BCM", stage: "Stage 4: NOC Demand", overdue: true, amount: "₹ 28,00,000", phone: "+91 98200 44556", engine: "ENG: JCB3DX99", status: "Active", discrepancy: false, history: [] },
+      { loanNo: "RC/2026/90288", customer: "Buildcon Infra", product: "Construction Equip", model: "CAT 320 Excavator", rcm: "Sunil Rao (RCM)", region: "West", state: "Maharashtra", source: "Direct Sales", bcm: "Confirmed by BCM", stage: "Stage 2: Valuation", overdue: false, amount: "₹ 45,00,000", phone: "+91 98989 89898", engine: "ENG: CAT32099", status: "Active", discrepancy: false, history: [] },
+      { loanNo: "RC/2026/90412", customer: "Delta Freight Corp", product: "Commercial Vehicle", model: "Tata Signa 2823", rcm: "Sunil Rao (RCM)", region: "West", state: "Maharashtra", source: "Corporate DSA", bcm: "Confirmed by BCM", stage: "Stage 5: RTO Receipt", overdue: true, amount: "₹ 32,00,000", phone: "+91 98123 45678", engine: "ENG: TSIGN99", status: "Flagged", discrepancy: true, discrepancyType: "HPA Not Endorsed", finding: "Bank Hypo Missing on Vahan API", history: [] },
+      { loanNo: "RC/2026/78910", customer: "Rajesh Iyer", product: "Tractor (Agri)", model: "John Deere 5050D", rcm: "Suresh Nair (RCM)", region: "South", state: "Karnataka", source: "Branch RC Limit", bcm: "Confirmed by BCM", stage: "Stage 2: Verification", overdue: true, amount: "₹ 7,10,000", phone: "+91 94888 77665", engine: "ENG: JD50509", status: "Flagged", discrepancy: true, discrepancyType: "Borrower Name Mismatch", finding: "R. Iyer vs Rajesh K. Iyer", history: [] }
+    ];
+
+    // Seed remaining cases up to ~100 to ensure robust analytics
+    function initializeMasterCases() {
+      if (!localStorage.getItem('rc_master_cases')) {
+        let expanded = [...defaultMasterCases];
+        let products = ["Commercial Vehicle", "Car (Passenger)", "Tractor (Agri)", "Construction Equip"];
+        let rcms = [
+          { name: "Vikas Gupta (RCM)", region: "North", state: "Delhi NCR" },
+          { name: "Vikas Gupta (RCM)", region: "North", state: "Uttar Pradesh" },
+          { name: "Sunil Rao (RCM)", region: "West", state: "Maharashtra" },
+          { name: "Sunil Rao (RCM)", region: "West", state: "Gujarat" },
+          { name: "Suresh Nair (RCM)", region: "South", state: "Karnataka" },
+          { name: "Suresh Nair (RCM)", region: "South", state: "Tamil Nadu" },
+          { name: "Ananya Roy (RCM)", region: "East", state: "West Bengal & East" }
+        ];
+        for (let i = 12; i <= 100; i++) {
+          let rcmObj = rcms[i % rcms.length];
+          let prod = products[i % products.length];
+          expanded.push({
+            loanNo: `RC/2026/${82000 + i}`,
+            customer: `Customer Entity ${i}`,
+            product: prod,
+            model: `${prod} Model X`,
+            rcm: rcmObj.name,
+            region: rcmObj.region,
+            state: rcmObj.state,
+            source: i % 2 === 0 ? "Retail DSA" : "Corporate DSA",
+            bcm: i % 5 === 0 ? "BCM Pending" : "Confirmed by BCM",
+            stage: i % 3 === 0 ? "Stage 1: Intake" : "Stage 3: Customer Payment",
+            overdue: i % 7 === 0,
+            amount: `₹ ${(5 + (i % 20))},00,000`,
+            phone: `+91 98${(10000000 + i).toString().substring(0,8)}`,
+            engine: `ENG: EN9928${i}`,
+            status: "Active",
+            discrepancy: false,
+            history: []
+          });
+        }
+        localStorage.setItem('rc_master_cases', JSON.stringify(expanded));
+      }
+    }
+    initializeMasterCases();
+
+    function getMasterCases() {
+      return JSON.parse(localStorage.getItem('rc_master_cases')) || defaultMasterCases;
+    }
+
+    function saveMasterCases(cases) {
+      localStorage.setItem('rc_master_cases', JSON.stringify(cases));
+      renderAllScreens();
+    }
+
+    let activeLoanNo = "RC/2026/81245";
+    let activeQueueCaseNumbers = null;
+    let activeDashboardTrackerMetric = null;
+    let activeDashboardTrackerChannel = "Retail DSA";
+
+    // --- SCREEN ROUTER & NAVIGATION ---
+    function switchScreen(screenId, loanNo = null, queueCaseNumbers = null) {
+      document.querySelectorAll('.screen-container').forEach(el => el.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+      window.scrollTo(0, 0);
+
+      if (screenId === 'screen-3') {
+        activeQueueCaseNumbers = Array.isArray(queueCaseNumbers) ? queueCaseNumbers : null;
+        if (activeQueueCaseNumbers) document.getElementById('queue-search').value = '';
+      }
+
+      if (loanNo) {
+        activeLoanNo = loanNo;
+      }
+
+      if (screenId === 'screen-2') renderDashboard();
+      if (screenId === 'screen-3') renderCasesQueue();
+      if (screenId === 'screen-4') renderDisposition(activeLoanNo);
+      if (screenId === 'screen-5') renderReviewer(loanNo || activeLoanNo);
+      if (screenId === 'screen-6') renderMISReportTable();
+    }
+
+    const dashboardTrackerFilters = {
+      fresh: {
+        title: 'Fresh Cases Inflow',
+        filter: item => item.status === 'Active' && (item.stage || '').toLowerCase().includes('intake')
+      },
+      credit: {
+        title: 'Credit First-Level Check Pending',
+        filter: item => item.status === 'Active' && (item.bcm || '').toLowerCase().includes('pending')
+      },
+      caller: {
+        title: 'Caller First-Level Check Pending',
+        filter: item => item.status === 'Active' && !(item.bcm || '').toLowerCase().includes('pending')
+      },
+      portfolio: {
+        title: 'Total Portfolio MTD',
+        filter: () => true
+      },
+      pipeline: {
+        title: 'Active Pipeline',
+        filter: item => item.status !== 'Closed'
+      },
+      overdue: {
+        title: 'Overdue Triggers',
+        filter: item => Boolean(item.overdue)
+      },
+      closed: {
+        title: 'Closed & Updated',
+        filter: item => item.status === 'Closed'
+      }
+    };
+
+    function activateDashboardTracker(event, metric) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        filterDashboardTracker(metric);
+      }
+    }
+
+    function filterDashboardTracker(metric) {
+      const filter = dashboardTrackerFilters[metric];
+      if (!filter) return;
+      activeDashboardTrackerMetric = metric;
+      activeDashboardTrackerChannel = null;
+      document.querySelectorAll('.master-channel-tab').forEach(tab => tab.classList.remove('active'));
+      document.getElementById('current-tracker-title').innerText =
+        `${filter.title} — Trigger Stage Summary Tracker`;
+      renderTrackerTable('All', metric);
+      document.getElementById('current-tracker-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // --- DASHBOARD RENDERER ---
+    function renderDashboard() {
+      const cases = getMasterCases();
+      let total = cases.length;
+      let activePipeline = cases.filter(c => c.status !== 'Closed').length;
+      let closed = cases.filter(c => c.status === 'Closed').length;
+      let overdue = cases.filter(c => c.overdue).length;
+      let discrepancies = cases.filter(c => c.discrepancy).length;
+
+      document.getElementById('dash-total-pipeline-count').innerText = activePipeline;
+      document.getElementById('dash-fresh-count').innerText = cases.filter(dashboardTrackerFilters.fresh.filter).length;
+      document.getElementById('dash-credit-count').innerText = cases.filter(dashboardTrackerFilters.credit.filter).length;
+      document.getElementById('dash-caller-count').innerText = cases.filter(dashboardTrackerFilters.caller.filter).length;
+      document.getElementById('kpi-total-portfolio').innerText = total;
+      document.getElementById('kpi-active-pipeline').innerText = activePipeline;
+      document.getElementById('kpi-overdue-count').innerText = overdue;
+      document.getElementById('kpi-closed-count').innerText = closed;
+      document.getElementById('kpi-discrepancy-count').innerText = discrepancies;
+
+      // Product counts
+      let cvCount = cases.filter(c => c.product === 'Commercial Vehicle').length;
+      let carCount = cases.filter(c => c.product === 'Car (Passenger)').length;
+      let tractorCount = cases.filter(c => c.product === 'Tractor (Agri)').length;
+      let ceCount = cases.filter(c => c.product === 'Construction Equip').length;
+
+      document.getElementById('count-cv').innerText = cvCount;
+      document.getElementById('count-car').innerText = carCount;
+      document.getElementById('count-tractor').innerText = tractorCount;
+      document.getElementById('count-ce').innerText = ceCount;
+
+      if (activeDashboardTrackerMetric) {
+        const metric = dashboardTrackerFilters[activeDashboardTrackerMetric];
+        document.getElementById('current-tracker-title').innerText =
+          `${metric.title} — Trigger Stage Summary Tracker`;
+        renderTrackerTable('All', activeDashboardTrackerMetric);
+      } else {
+        document.getElementById('current-tracker-title').innerText =
+          `${activeDashboardTrackerChannel} — Trigger Stage Summary Tracker`;
+        renderTrackerTable(activeDashboardTrackerChannel);
+      }
+    }
+
+    function filterChannel(channelName) {
+      activeDashboardTrackerMetric = null;
+      activeDashboardTrackerChannel = channelName;
+      document.querySelectorAll('.master-channel-tab').forEach(t => t.classList.remove('active'));
+      if(channelName === 'Corporate DSA') document.getElementById('tab-corp').classList.add('active');
+      if(channelName === 'Retail DSA') document.getElementById('tab-retail').classList.add('active');
+      if(channelName === 'Branch RC Limit') document.getElementById('tab-branch').classList.add('active');
+      document.getElementById('current-tracker-title').innerText = `${channelName} — Trigger Stage Summary Tracker`;
+      renderTrackerTable(channelName);
+    }
+
+    function renderTrackerTable(channel, metric = null) {
+      if (metric && dashboardTrackerFilters[metric]) {
+        renderFilteredTrackerTable(dashboardTrackerFilters[metric]);
+        return;
+      }
+
+      const cases = getMasterCases().filter(c => channel === 'All' || c.source.includes(channel) || c.source === channel);
+      const tbody = document.getElementById('tracker-table-body');
+      document.querySelector('#tracker-table-body').closest('table').querySelector('thead tr').children[2].textContent = 'Overdue Days';
+      tbody.innerHTML = `
+        <tr>
+          <td><strong>Stage 1: Vehicle Delivered Verification</strong></td>
+          <td>Day 7 from Disb</td>
+          <td><span style="color:#059669; font-weight:700;">0 Days</span></td>
+          <td>${cases.length}</td>
+          <td style="background:#EBF5FF; font-weight:700; color:#0A3981; cursor:pointer;" onclick="switchScreen('screen-3')">${Math.round(cases.length * 0.3)} Cases (Click)</td>
+          <td><span class="badge badge-verified">0 Discrepancy</span></td>
+          <td><span class="badge badge-on-track">On Track</span></td>
+        </tr>
+        <tr>
+          <td><strong>Stage 3: Customer Margin Payment</strong></td>
+          <td>Day 7 from Disb</td>
+          <td><span style="color:#DC2626; font-weight:700;">3-5 Days Overdue</span></td>
+          <td>${cases.length}</td>
+          <td style="background:#EBF5FF; font-weight:700; color:#0A3981; cursor:pointer;" onclick="switchScreen('screen-3')">${Math.round(cases.length * 0.4)} Cases (Click)</td>
+          <td><span class="badge badge-warning">2 Flagged</span></td>
+          <td><span class="badge badge-warning">SLA Attention</span></td>
+        </tr>
+        <tr>
+          <td><strong>Stage 6: Vahan API Closure</strong></td>
+          <td>Day 30 from Disb</td>
+          <td><span style="color:#DC2626; font-weight:700;">8 Days Overdue</span></td>
+          <td>${cases.length}</td>
+          <td style="background:#EBF5FF; font-weight:700; color:#0A3981; cursor:pointer;" onclick="switchScreen('screen-3')">${Math.round(cases.length * 0.3)} Cases (Click)</td>
+          <td><span class="badge badge-rcu">3 Discrepancies</span></td>
+          <td><span class="badge badge-warning">Action Required</span></td>
+        </tr>
+      `;
+    }
+
+    function renderFilteredTrackerTable(metric) {
+      const allCases = getMasterCases();
+      const matchingCases = allCases.filter(metric.filter);
+      const casesByStage = new Map();
+      matchingCases.forEach(item => {
+        const stage = item.stage || 'Stage not assigned';
+        if (!casesByStage.has(stage)) casesByStage.set(stage, []);
+        casesByStage.get(stage).push(item);
+      });
+
+      const tbody = document.getElementById('tracker-table-body');
+      tbody.replaceChildren();
+      const overdueHeading = document.querySelector('#tracker-table-body').closest('table').querySelector('thead tr').children[2];
+      overdueHeading.textContent = 'Overdue Cases';
+
+      if (matchingCases.length === 0) {
+        const row = tbody.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 7;
+        cell.style.textAlign = 'center';
+        cell.textContent = `No ${metric.title.toLowerCase()} cases found.`;
+        return;
+      }
+
+      Array.from(casesByStage.entries()).sort(([a], [b]) => a.localeCompare(b)).forEach(([stage, stageCases]) => {
+        const row = tbody.insertRow();
+        const overdueCount = stageCases.filter(item => item.overdue).length;
+        const discrepancyCount = stageCases.filter(item => item.discrepancy).length;
+
+        const stageCell = row.insertCell();
+        const stageLabel = document.createElement('strong');
+        stageLabel.textContent = stage;
+        stageCell.appendChild(stageLabel);
+        const stageVerification = getStageVerification(stageCases[0]);
+        if (stageVerification) {
+          const savedCount = stageCases.filter(item => getStageVerification(item)?.saved).length;
+          const verificationSummary = document.createElement('div');
+          verificationSummary.className = `badge ${savedCount === stageCases.length ? 'badge-verified' : 'badge-warning'}`;
+          verificationSummary.style.marginTop = '4px';
+          verificationSummary.textContent = `${savedCount} Action Saved • ${stageCases.length - savedCount} Action Required`;
+          stageCell.appendChild(verificationSummary);
+        }
+        row.insertCell().textContent = '—';
+
+        const overdueCell = row.insertCell();
+        const overdueLabel = overdueCount
+          ? document.createElement('button')
+          : document.createElement('span');
+        if (overdueCount) {
+          overdueLabel.type = 'button';
+          overdueLabel.className = 'overdue-case-count';
+          overdueLabel.setAttribute('aria-label', `View ${overdueCount} overdue cases in ${stage}`);
+          overdueLabel.addEventListener('click', () => openOverdueCasesPopup(
+            stageCases.filter(item => Boolean(item.overdue)),
+            stage
+          ));
+        }
+        overdueLabel.style.cssText = `color:${overdueCount ? '#DC2626' : '#059669'}; font-weight:700;`;
+        overdueLabel.textContent = `${overdueCount} Cases`;
+        overdueCell.appendChild(overdueLabel);
+        row.insertCell().textContent = String(allCases.filter(item => (item.stage || 'Stage not assigned') === stage).length);
+
+        const pendingCell = row.insertCell();
+        pendingCell.style.cssText = 'background:#EBF5FF; font-weight:700; color:#0A3981;';
+        const pendingButton = document.createElement('button');
+        pendingButton.type = 'button';
+        pendingButton.textContent = `${stageCases.length} Cases (Click)`;
+        pendingButton.style.cssText = 'border:0; background:transparent; color:inherit; font:inherit; cursor:pointer;';
+        pendingButton.addEventListener('click', () => {
+          switchScreen('screen-3', null, stageCases.map(item => item.loanNo));
+        });
+        pendingCell.appendChild(pendingButton);
+
+        const discrepancyCell = row.insertCell();
+        const discrepancyBadge = document.createElement('span');
+        discrepancyBadge.className = `badge ${discrepancyCount ? 'badge-rcu' : 'badge-verified'}`;
+        discrepancyBadge.textContent = `${discrepancyCount} Discrepancies`;
+        discrepancyCell.appendChild(discrepancyBadge);
+
+        const slaCell = row.insertCell();
+        const slaBadge = document.createElement('span');
+        slaBadge.className = `badge ${overdueCount ? 'badge-warning' : 'badge-on-track'}`;
+        slaBadge.textContent = overdueCount ? 'SLA Attention' : 'On Track';
+        slaCell.appendChild(slaBadge);
+      });
+    }
+
+    function openOverdueCasesPopup(cases, stage) {
+      const modal = document.getElementById('overdueCasesModal');
+      const tbody = document.getElementById('overdue-cases-popup-body');
+      tbody.replaceChildren();
+      document.getElementById('overdue-modal-title').textContent = `Overdue Cases — ${stage}`;
+      document.getElementById('overdue-modal-count').textContent =
+        `${cases.length} ${cases.length === 1 ? 'case' : 'cases'}`;
+
+      cases.forEach(item => {
+        const row = tbody.insertRow();
+        const values = [
+          item.loanNo,
+          item.customer,
+          item.product,
+          item.model,
+          item.rcm,
+          item.source,
+          item.bcm,
+          item.stage
+        ];
+        values.forEach(value => {
+          row.insertCell().textContent = value || '—';
+        });
+        appendStageVerificationBadge(row.cells[7], item);
+      });
+
+      modal.style.display = 'flex';
+      modal.querySelector('[aria-label="Close overdue cases"]').focus();
+    }
+
+    function closeOverdueCasesPopup() {
+      document.getElementById('overdueCasesModal').style.display = 'none';
+    }
+
+    // --- CASES QUEUE RENDERER ---
+    function renderCasesQueue() {
+      const cases = getMasterCases();
+      const searchQuery = (document.getElementById('queue-search')?.value || "").toLowerCase();
+      const tbody = document.getElementById('cases-queue-tbody');
+      tbody.innerHTML = '';
+
+      let filtered = cases.filter(c =>
+        (!activeQueueCaseNumbers || activeQueueCaseNumbers.includes(c.loanNo)) &&
+        (c.loanNo.toLowerCase().includes(searchQuery) || c.customer.toLowerCase().includes(searchQuery))
+      );
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding: 20px;">No matching cases found in queue.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        let row = document.createElement('tr');
+        row.innerHTML = `
+          <td><a href="#" style="color: #0066FF; font-weight: 700;" onclick="switchScreen('screen-4', '${escapeHTML(item.loanNo)}'); return false;">${escapeHTML(item.loanNo)}</a></td>
+          <td><strong>${escapeHTML(item.customer)}</strong></td>
+          <td>${escapeHTML(item.product)}</td>
+          <td>${escapeHTML(item.model)}</td>
+          <td><strong>${escapeHTML(item.rcm)}</strong></td>
+          <td>${escapeHTML(item.source)}</td>
+          <td><span class="badge ${item.bcm.includes('Pending') ? 'badge-warning' : 'badge-verified'}">${escapeHTML(item.bcm)}</span></td>
+          <td><span class="badge badge-warning">${escapeHTML(item.stage)}</span></td>
+          <td><button class="btn-action" onclick="switchScreen('screen-4', '${escapeHTML(item.loanNo)}')"><i class="fa-solid fa-phone"></i> Process</button></td>
+        `;
+        appendStageVerificationBadge(row.cells[7], item);
+        tbody.appendChild(row);
+      });
+      document.getElementById('cases-queue-heading').innerText = activeQueueCaseNumbers
+        ? `Selected Pending Cases (${filtered.length})`
+        : `Cases Queue — Post BCM Confirmation (${filtered.length} Active)`;
+    }
+
+    // --- Queue CSV export (used by "Export CSV" on the Cases Queue screen) ---
+    function exportQueueCSV() {
+      const searchQuery = (document.getElementById('queue-search')?.value || "").toLowerCase();
+      const cases = getMasterCases().filter(c =>
+        (!activeQueueCaseNumbers || activeQueueCaseNumbers.includes(c.loanNo)) &&
+        (c.loanNo.toLowerCase().includes(searchQuery) || c.customer.toLowerCase().includes(searchQuery))
+      );
+      const headers = ['Loan Number', 'Customer Name', 'Product', 'Asset Make & Model', 'RCM In-Charge', 'Source Segment', 'BCM Confirmation', 'Current Stage', 'Loan Amount', 'Phone', 'Engine No', 'Overdue'];
+      const rows = cases.map(c => [c.loanNo, c.customer, c.product, c.model, c.rcm, c.source, c.bcm, c.stage, c.amount, c.phone, c.engine, c.overdue ? 'Yes' : 'No']);
+      downloadCSVFile('rc-track-cases-queue', headers, rows);
+    }
+
+    function downloadCSVFile(baseName, headers, rows) {
+      const csv = [headers, ...rows].map(r => r.map(escapeCSVValue).join(',')).join('\r\n');
+      const blob = new Blob(['\uFEFF', csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${baseName}-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    // =====================================================================
+    // ADD CASE + BULK UPLOAD
+    // =====================================================================
+    const PRODUCT_LIST = ["Commercial Vehicle", "Car (Passenger)", "Tractor (Agri)", "Construction Equip"];
+    const PRODUCT_ALIASES = {
+      "cv": "Commercial Vehicle", "commercial": "Commercial Vehicle", "commercial vehicle": "Commercial Vehicle",
+      "car": "Car (Passenger)", "passenger": "Car (Passenger)", "car (passenger)": "Car (Passenger)", "passenger car": "Car (Passenger)",
+      "tractor": "Tractor (Agri)", "agri": "Tractor (Agri)", "tractor (agri)": "Tractor (Agri)",
+      "ce": "Construction Equip", "construction": "Construction Equip", "construction equip": "Construction Equip", "construction equipment": "Construction Equip"
+    };
+    const SOURCE_LIST = ["Retail DSA", "Corporate DSA", "Branch RC Limit", "Direct Sales", "Dealer Network"];
+    const STAGE_LIST = [
+      "Stage 1: Intake", "Stage 2: Verification", "Stage 3: Customer Payment",
+      "Stage 4: NOC Demand", "Stage 5: RTO Receipt", "Stage 6: Final Vahan Check"
+    ];
+    const RCM_DIRECTORY = [
+      { rcm: "Vikas Gupta (RCM)", region: "North", state: "Delhi NCR" },
+      { rcm: "Vikas Gupta (RCM)", region: "North", state: "Uttar Pradesh" },
+      { rcm: "Amit Shah (RCM)",   region: "North", state: "Delhi NCR" },
+      { rcm: "Sunil Rao (RCM)",   region: "West",  state: "Maharashtra" },
+      { rcm: "Sunil Rao (RCM)",   region: "West",  state: "Gujarat" },
+      { rcm: "Suresh Nair (RCM)", region: "South", state: "Karnataka" },
+      { rcm: "Suresh Nair (RCM)", region: "South", state: "Tamil Nadu" },
+      { rcm: "Ananya Roy (RCM)",  region: "East",  state: "West Bengal & East" }
+    ];
+    const BULK_HEADERS = [
+      'Loan Number', 'Customer Name', 'Product', 'Asset Make & Model', 'RCM In-Charge', 'State',
+      'Source Segment', 'BCM Confirmation', 'Current Stage', 'Loan Amount', 'Phone', 'Engine No', 'Overdue'
+    ];
+    const BULK_MAX_ROWS = 5000;
+    const LOAN_NO_PATTERN = /^[A-Za-z0-9][A-Za-z0-9\/_\-]{2,39}$/;
+
+    let bulkValidCases = [];
+
+    function showToast(message, isError = false) {
+      const box = document.getElementById('toast-box');
+      const el = document.createElement('div');
+      el.className = 'toast' + (isError ? ' error' : '');
+      el.textContent = message;
+      box.appendChild(el);
+      setTimeout(() => el.remove(), 4500);
+    }
+
+    function formatINR(raw) {
+      const digits = String(raw == null ? '' : raw).replace(/[₹,\s]/g, '');
+      if (digits === '') return '—';
+      const num = Number(digits);
+      if (!isFinite(num) || num < 0) return null;
+      return `₹ ${num.toLocaleString('en-IN')}`;
+    }
+
+    function formatPhone(raw) {
+      let digits = String(raw == null ? '' : raw).replace(/\D/g, '');
+      if (digits === '') return '—';
+      if (digits.length === 12 && digits.startsWith('91')) digits = digits.slice(2);
+      if (digits.length === 11 && digits.startsWith('0')) digits = digits.slice(1);
+      if (!/^[6-9]\d{9}$/.test(digits)) return null;
+      return `+91 ${digits.slice(0, 5)} ${digits.slice(5)}`;
+    }
+
+    function nextLoanNumber(existingSet) {
+      let max = 82000;
+      existingSet.forEach(no => {
+        const m = /^RC\/2026\/(\d+)$/.exec(no);
+        if (m) max = Math.max(max, Number(m[1]));
+      });
+      let candidate;
+      do { max += 1; candidate = `RC/2026/${max}`; } while (existingSet.has(candidate));
+      return candidate;
+    }
+
+    function findTerritory(rcmName, stateName) {
+      const clean = s => String(s || '').toLowerCase().replace(/\(rcm\)/g, '').replace(/\s+/g, ' ').trim();
+      const matches = RCM_DIRECTORY.filter(r => clean(r.rcm) === clean(rcmName));
+      if (matches.length === 0) return null;
+      if (stateName && String(stateName).trim()) {
+        const byState = matches.find(r => clean(r.state) === clean(stateName));
+        return byState || { error: `State "${stateName}" is not covered by ${matches[0].rcm}` };
+      }
+      return matches[0];
+    }
+
+    function matchFromList(value, list) {
+      const v = String(value || '').trim().toLowerCase();
+      return list.find(x => x.toLowerCase() === v) || null;
+    }
+
+    // Validates one raw record and returns { error } or { caseObj }.
+    function buildCaseRecord(raw, existingSet) {
+      const errors = [];
+      const loanNo = String(raw.loanNo || '').trim();
+      const customer = String(raw.customer || '').trim();
+
+      if (!loanNo) errors.push('Loan Number is required');
+      else if (!LOAN_NO_PATTERN.test(loanNo)) errors.push('Loan Number may only use letters, digits, / _ - (3–40 chars)');
+      else if (existingSet.has(loanNo.toLowerCase())) errors.push('Duplicate Loan Number');
+
+      if (!customer) errors.push('Customer Name is required');
+      else if (customer.length > 120) errors.push('Customer Name too long');
+
+      const productKey = String(raw.product || '').trim().toLowerCase();
+      const product = PRODUCT_ALIASES[productKey] || matchFromList(raw.product, PRODUCT_LIST);
+      if (!product) errors.push(`Product must be one of: ${PRODUCT_LIST.join(' / ')}`);
+
+      const territory = findTerritory(raw.rcm, raw.state);
+      if (!String(raw.rcm || '').trim()) errors.push('RCM In-Charge is required');
+      else if (!territory) errors.push(`Unknown RCM "${raw.rcm}"`);
+      else if (territory.error) errors.push(territory.error);
+
+      let source = 'Retail DSA';
+      if (String(raw.source || '').trim()) {
+        source = matchFromList(raw.source, SOURCE_LIST);
+        if (!source) errors.push(`Source Segment must be one of: ${SOURCE_LIST.join(' / ')}`);
+      }
+
+      let stage = 'Stage 1: Intake';
+      if (String(raw.stage || '').trim()) {
+        stage = matchFromList(raw.stage, STAGE_LIST);
+        if (!stage) errors.push(`Current Stage must be one of: ${STAGE_LIST.join(' / ')}`);
+      }
+
+      const bcmText = String(raw.bcm || '').trim().toLowerCase();
+      const bcm = bcmText && !bcmText.includes('pending') && (bcmText.includes('confirm') || bcmText === 'yes')
+        ? 'Confirmed by BCM' : 'BCM Pending';
+
+      const amount = formatINR(raw.amount);
+      if (amount === null) errors.push('Loan Amount must be a valid number');
+      const phone = formatPhone(raw.phone);
+      if (phone === null) errors.push('Phone must be a valid 10-digit Indian mobile number');
+
+      const overdueText = String(raw.overdue == null ? '' : raw.overdue).trim().toLowerCase();
+      const overdue = raw.overdue === true || ['yes', 'y', 'true', '1'].includes(overdueText);
+
+      if (errors.length) return { error: errors.join('; ') };
+
+      return {
+        caseObj: {
+          loanNo,
+          customer,
+          product,
+          model: String(raw.model || '').trim() || '—',
+          rcm: territory.rcm,
+          region: territory.region,
+          state: territory.state,
+          source,
+          bcm,
+          stage,
+          overdue,
+          amount,
+          phone,
+          engine: String(raw.engine || '').trim() || '—',
+          status: 'Active',
+          discrepancy: false,
+          history: []
+        }
+      };
+    }
+
+    function getExistingLoanSet() {
+      return new Set(getMasterCases().map(c => String(c.loanNo).toLowerCase()));
+    }
+
+    // ---------- Add Case ----------
+    function populateAddCaseOptions() {
+      const fill = (id, items, mapper) => {
+        const el = document.getElementById(id);
+        el.innerHTML = '';
+        items.forEach((it, idx) => {
+          const opt = document.createElement('option');
+          const { value, label } = mapper(it, idx);
+          opt.value = value;
+          opt.textContent = label;
+          el.appendChild(opt);
+        });
+      };
+      fill('ac-product', PRODUCT_LIST, p => ({ value: p, label: p }));
+      fill('ac-source', SOURCE_LIST, s => ({ value: s, label: s }));
+      fill('ac-stage', STAGE_LIST, s => ({ value: s, label: s }));
+      fill('ac-rcm', RCM_DIRECTORY, (r, i) => ({ value: String(i), label: `${r.rcm} — ${r.region} / ${r.state}` }));
+    }
+
+    function clearAddCaseErrors() {
+      document.querySelectorAll('#addCaseForm .field-error').forEach(e => e.textContent = '');
+      document.querySelectorAll('#addCaseForm .input-field').forEach(e => e.classList.remove('invalid'));
+    }
+
+    function setFieldError(inputId, message) {
+      const input = document.getElementById(inputId);
+      const err = document.getElementById('err-' + inputId);
+      if (input) input.classList.add('invalid');
+      if (err) err.textContent = message;
+    }
+
+    function openAddCaseModal() {
+      populateAddCaseOptions();
+      document.getElementById('addCaseForm').reset();
+      clearAddCaseErrors();
+      document.getElementById('addCaseModal').style.display = 'flex';
+      document.getElementById('ac-loan').focus();
+    }
+
+    function closeAddCaseModal() {
+      document.getElementById('addCaseModal').style.display = 'none';
+    }
+
+    function submitAddCase() {
+      clearAddCaseErrors();
+      const existing = getExistingLoanSet();
+      const territory = RCM_DIRECTORY[Number(document.getElementById('ac-rcm').value)];
+      let loanNo = document.getElementById('ac-loan').value.trim();
+      if (!loanNo) loanNo = nextLoanNumber(existing);
+
+      const result = buildCaseRecord({
+        loanNo,
+        customer: document.getElementById('ac-customer').value,
+        product: document.getElementById('ac-product').value,
+        model: document.getElementById('ac-model').value,
+        rcm: territory.rcm,
+        state: territory.state,
+        source: document.getElementById('ac-source').value,
+        bcm: document.getElementById('ac-bcm').value,
+        stage: document.getElementById('ac-stage').value,
+        amount: document.getElementById('ac-amount').value,
+        phone: document.getElementById('ac-phone').value,
+        engine: document.getElementById('ac-engine').value,
+        overdue: document.getElementById('ac-overdue').checked
+      }, existing);
+
+      if (result.error) {
+        // Map messages to the right fields
+        result.error.split('; ').forEach(msg => {
+          if (/Loan Number|Duplicate/.test(msg)) setFieldError('ac-loan', msg);
+          else if (/Customer/.test(msg)) setFieldError('ac-customer', msg);
+          else if (/Phone/.test(msg)) setFieldError('ac-phone', msg);
+          else if (/Amount/.test(msg)) setFieldError('ac-amount', msg);
+          else showToast(msg, true);
+        });
+        return;
+      }
+
+      const cases = getMasterCases();
+      cases.unshift(result.caseObj);          // newest case shows at the top of the queue
+      activeQueueCaseNumbers = null;           // make sure the new case is visible
+      const search = document.getElementById('queue-search');
+      if (search) search.value = '';
+      saveMasterCases(cases);                  // persists + refreshes dashboard, queue, MIS, reviewer
+      closeAddCaseModal();
+      showToast(`Case ${result.caseObj.loanNo} added successfully.`);
+    }
+
+    // ---------- Bulk Upload ----------
+    function openBulkUploadModal() {
+      resetBulkUploadState();
+      document.getElementById('bulkUploadModal').style.display = 'flex';
+    }
+
+    function closeBulkUploadModal() {
+      document.getElementById('bulkUploadModal').style.display = 'none';
+      resetBulkUploadState();
+    }
+
+    function resetBulkUploadState() {
+      bulkValidCases = [];
+      document.getElementById('bulk-file').value = '';
+      document.getElementById('bulk-file-name').textContent = '';
+      document.getElementById('bulk-result').style.display = 'none';
+      document.getElementById('bulk-preview-body').innerHTML = '';
+      document.getElementById('bulk-import-btn').disabled = true;
+    }
+
+    function downloadBulkTemplate() {
+      const sample = [
+        ['RC/2026/83001', 'Sample Transport Pvt Ltd', 'Commercial Vehicle', 'Tata 407 Gold SFC', 'Vikas Gupta (RCM)', 'Delhi NCR', 'Retail DSA', 'BCM Pending', 'Stage 1: Intake', '750000', '9876543210', 'ENG: 4SPCR99281', 'No'],
+        ['RC/2026/83002', 'Sample Agro Farms', 'Tractor (Agri)', 'Mahindra 575 DI', 'Suresh Nair (RCM)', 'Karnataka', 'Branch RC Limit', 'Confirmed by BCM', 'Stage 3: Customer Payment', '580000', '9443322110', 'ENG: MH57591', 'Yes']
+      ];
+      downloadCSVFile('rc-track-bulk-upload-template', BULK_HEADERS, sample);
+    }
+
+    // RFC-4180 style CSV parser (quotes, commas and newlines inside quotes, BOM)
+    function parseCSVText(text) {
+      if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+      const rows = [];
+      let row = [], field = '', inQuotes = false;
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (inQuotes) {
+          if (ch === '"') {
+            if (text[i + 1] === '"') { field += '"'; i++; }
+            else inQuotes = false;
+          } else field += ch;
+        } else if (ch === '"') inQuotes = true;
+        else if (ch === ',') { row.push(field); field = ''; }
+        else if (ch === '\n' || ch === '\r') {
+          if (ch === '\r' && text[i + 1] === '\n') i++;
+          row.push(field); field = '';
+          rows.push(row); row = [];
+        } else field += ch;
+      }
+      if (field !== '' || row.length) { row.push(field); rows.push(row); }
+      return rows.filter(r => r.some(c => String(c).trim() !== ''));
+    }
+
+    const HEADER_ALIASES = {
+      loanNo: ['loan number', 'loan no', 'lan', 'loan', 'loan_number', 'loanno'],
+      customer: ['customer name', 'customer', 'borrower', 'borrower name'],
+      product: ['product'],
+      model: ['asset make & model', 'asset make and model', 'asset', 'model', 'make & model', 'make model'],
+      rcm: ['rcm in-charge', 'rcm in charge', 'rcm', 'regional credit manager'],
+      state: ['state'],
+      source: ['source segment', 'source', 'channel', 'segment'],
+      bcm: ['bcm confirmation', 'bcm', 'bcm status'],
+      stage: ['current stage', 'stage'],
+      amount: ['loan amount', 'amount', 'loan sanctioned'],
+      phone: ['phone', 'contact number', 'mobile', 'phone number', 'contact'],
+      engine: ['engine no', 'engine', 'engine / chassis', 'engine number', 'engine/chassis'],
+      overdue: ['overdue', 'is overdue', 'sla breached']
+    };
+
+    function mapHeaderRow(headerRow) {
+      const map = {};
+      headerRow.forEach((h, idx) => {
+        const key = String(h || '').trim().toLowerCase().replace(/\s+/g, ' ');
+        for (const field in HEADER_ALIASES) {
+          if (HEADER_ALIASES[field].includes(key) && map[field] === undefined) map[field] = idx;
+        }
+      });
+      return map;
+    }
+
+    function handleBulkFile(file) {
+      if (!file) return;
+      document.getElementById('bulk-file-name').textContent = `Selected: ${file.name}`;
+      const name = file.name.toLowerCase();
+      const reader = new FileReader();
+
+      if (name.endsWith('.xlsx') || name.endsWith('.xls')) {
+        if (typeof XLSX === 'undefined') {
+          showToast('Excel reader could not be loaded (check internet). Please save the file as CSV and upload again.', true);
+          return;
+        }
+        reader.onload = e => {
+          try {
+            const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+            const sheet = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: false, defval: '' });
+            processBulkRows(rows.filter(r => r.some(c => String(c).trim() !== '')));
+          } catch (err) {
+            showToast('Could not read the Excel file: ' + err.message, true);
+          }
+        };
+        reader.readAsArrayBuffer(file);
+      } else if (name.endsWith('.csv')) {
+        reader.onload = e => {
+          try { processBulkRows(parseCSVText(String(e.target.result))); }
+          catch (err) { showToast('Could not read the CSV file: ' + err.message, true); }
+        };
+        reader.readAsText(file);
+      } else {
+        showToast('Unsupported file type. Please upload .csv, .xlsx or .xls', true);
+      }
+    }
+
+    function processBulkRows(rows) {
+      if (rows.length < 2) {
+        showToast('The file has no data rows. Download the template to see the expected format.', true);
+        return;
+      }
+      const map = mapHeaderRow(rows[0]);
+      const missing = ['loanNo', 'customer', 'product', 'rcm'].filter(f => map[f] === undefined);
+      if (missing.length) {
+        const labels = { loanNo: 'Loan Number', customer: 'Customer Name', product: 'Product', rcm: 'RCM In-Charge' };
+        showToast('Missing required column(s): ' + missing.map(m => labels[m]).join(', '), true);
+        return;
+      }
+      const dataRows = rows.slice(1);
+      if (dataRows.length > BULK_MAX_ROWS) {
+        showToast(`Too many rows (${dataRows.length}). Maximum is ${BULK_MAX_ROWS} per upload.`, true);
+        return;
+      }
+
+      const seen = getExistingLoanSet();       // existing loan numbers + ones already accepted in this file
+      const previewBody = document.getElementById('bulk-preview-body');
+      previewBody.innerHTML = '';
+      bulkValidCases = [];
+      let badCount = 0;
+
+      dataRows.forEach((r, i) => {
+        const get = f => map[f] === undefined ? '' : r[map[f]];
+        const raw = {
+          loanNo: get('loanNo'), customer: get('customer'), product: get('product'), model: get('model'),
+          rcm: get('rcm'), state: get('state'), source: get('source'), bcm: get('bcm'), stage: get('stage'),
+          amount: get('amount'), phone: get('phone'), engine: get('engine'), overdue: get('overdue')
+        };
+        const result = buildCaseRecord(raw, seen);
+        const tr = document.createElement('tr');
+        const cells = [i + 2, raw.loanNo, raw.customer, raw.product, raw.rcm, raw.source, raw.stage];
+        cells.forEach(v => { tr.insertCell().textContent = String(v == null || v === '' ? '—' : v); });
+        const resCell = tr.insertCell();
+        if (result.error) {
+          badCount++;
+          tr.className = 'row-bad';
+          resCell.style.cssText = 'color:#B91C1C; font-weight:600; white-space:normal; min-width:240px;';
+          resCell.textContent = '✗ ' + result.error;
+        } else {
+          seen.add(result.caseObj.loanNo.toLowerCase());
+          bulkValidCases.push(result.caseObj);
+          resCell.style.cssText = 'color:#047857; font-weight:600;';
+          resCell.textContent = '✓ Ready';
+        }
+        previewBody.appendChild(tr);
+      });
+
+      document.getElementById('bulk-pill-total').textContent = `${dataRows.length} rows read`;
+      document.getElementById('bulk-pill-ok').textContent = `${bulkValidCases.length} valid`;
+      document.getElementById('bulk-pill-bad').textContent = `${badCount} with errors`;
+      document.getElementById('bulk-result').style.display = 'block';
+      const importBtn = document.getElementById('bulk-import-btn');
+      importBtn.disabled = bulkValidCases.length === 0;
+      importBtn.innerHTML = `<i class="fa-solid fa-check"></i> Import ${bulkValidCases.length} Valid Case${bulkValidCases.length === 1 ? '' : 's'}`;
+    }
+
+    function confirmBulkImport() {
+      if (bulkValidCases.length === 0) return;
+      // Re-check duplicates against the latest saved data right before importing
+      const existing = getExistingLoanSet();
+      const toImport = bulkValidCases.filter(c => !existing.has(c.loanNo.toLowerCase()));
+      const skipped = bulkValidCases.length - toImport.length;
+      const cases = getMasterCases();
+      saveAndPrepend(cases, toImport);
+      closeBulkUploadModal();
+      showToast(`${toImport.length} case(s) imported successfully.` + (skipped ? ` ${skipped} skipped as duplicates.` : ''));
+    }
+
+    function saveAndPrepend(cases, newCases) {
+      activeQueueCaseNumbers = null;
+      const search = document.getElementById('queue-search');
+      if (search) search.value = '';
+      saveMasterCases([...newCases, ...cases]);
+    }
+
+    // Drag & drop support for the upload box
+    (function initBulkDropZone() {
+      const drop = document.getElementById('bulk-drop');
+      ['dragenter', 'dragover'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.add('dragover'); }));
+      ['dragleave', 'drop'].forEach(evt => drop.addEventListener(evt, e => { e.preventDefault(); drop.classList.remove('dragover'); }));
+      drop.addEventListener('drop', e => {
+        const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (file) handleBulkFile(file);
+      });
+    })();
+
+    function getStageVerification(item, stageNo = null) {
+      const match = stageNo
+        ? null
+        : (item.stage || '').match(/^Stage\s*(\d+)/i);
+      const resolvedStageNo = stageNo || (match ? Number(match[1]) : null);
+      if (![1, 2, 3].includes(resolvedStageNo)) return null;
+
+      const detail = item.stageDetails?.[`stage${resolvedStageNo}`];
+      if (!detail) return { saved: false, verified: false };
+
+      const verified = resolvedStageNo === 1
+        ? detail.status === 'Not Applicable' ||
+          (detail.status === 'Delivered to Customer' && Boolean(detail.date))
+        : resolvedStageNo === 2
+          ? detail.status === 'Yes' && Boolean(detail.utr?.trim()) && Boolean(detail.date)
+          : ['Full Received', 'Done By DSA'].includes(detail.status);
+      return { saved: detail.saved === true || Boolean(detail.status), verified };
+    }
+
+    function appendStageVerificationBadge(cell, item) {
+      const verification = getStageVerification(item);
+      if (!verification) return;
+
+      const badge = document.createElement('span');
+      badge.className = `badge ${verification.saved ? 'badge-verified' : 'badge-warning'}`;
+      badge.style.marginLeft = '6px';
+      badge.textContent = verification.saved ? 'Action Saved ✓' : 'Action Required';
+      cell.appendChild(badge);
+    }
+
+    function renderStageVerificationBadges(item) {
+      [1, 2, 3].forEach(stageNo => {
+        const badge = document.getElementById(`stg${stageNo}-badge`);
+        const verification = getStageVerification(item, stageNo);
+        badge.className = `badge ${verification?.saved ? 'badge-verified' : 'badge-warning'}`;
+        badge.textContent = verification?.saved ? 'Action Saved ✓' : 'Action Required';
+      });
+    }
+
+    // --- DISPOSITION / TELECALLING RENDERER ---
+    function renderDisposition(loanNo) {
+      const cases = getMasterCases();
+      const item = cases.find(c => c.loanNo === loanNo) || cases[0];
+      activeLoanNo = item.loanNo;
+
+      document.getElementById('header-active-lan').innerText = item.loanNo;
+      document.getElementById('dock-lan-badge').innerText = `LAN: ${item.loanNo}`;
+      document.getElementById('dock-customer').innerText = item.customer;
+      document.getElementById('dock-phone').innerText = item.phone;
+      document.getElementById('dock-amount').innerText = item.amount;
+      document.getElementById('dock-source').innerText = item.source;
+      document.getElementById('dock-product-model').innerText = `${item.product} - ${item.model}`;
+      document.getElementById('dock-engine').innerText = item.engine;
+      document.getElementById('dock-rcm').innerText = item.rcm;
+      document.getElementById('dock-title-rcm').innerText = `LIVE CALL DOCK — ASSIGNED RCM: ${item.rcm.toUpperCase()}`;
+      document.getElementById('bcm-case-type').value = item.bcmCaseType || 'Re-purchase';
+      document.getElementById('bcm-sub-type').value = item.bcmSubType || 'Financed Asset';
+      document.getElementById('bcm-remarks').value = item.bcmRemarks || '';
+      const stageDetails = item.stageDetails || {};
+      document.getElementById('stg1-status').value = stageDetails.stage1?.status || 'Delivered to Customer';
+      document.getElementById('stg1-date').value = stageDetails.stage1?.date || '';
+      document.getElementById('stg1-remarks').value = stageDetails.stage1?.remarks || '';
+      document.getElementById('stg2-status').value = stageDetails.stage2?.status || 'Yes';
+      document.getElementById('stg2-utr').value = stageDetails.stage2?.utr || '';
+      document.getElementById('stg2-date').value = stageDetails.stage2?.date || '';
+      document.getElementById('stg3-status').value = stageDetails.stage3?.status || 'Partial Received';
+      document.getElementById('stg3-ptp').value = stageDetails.stage3?.ptpDate || '';
+      document.getElementById('stg3-notes').value = stageDetails.stage3?.notes || '';
+      renderStageVerificationBadges(item);
+
+      // Render history table
+      const histBody = document.getElementById('dynamic-history-tbody');
+      histBody.innerHTML = '';
+      if (!item.history || item.history.length === 0) {
+        histBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:10px; color:#64748B;">No prior remarks recorded for this specific case yet.</td></tr>`;
+      } else {
+        item.history.forEach(h => {
+          let tr = document.createElement('tr');
+          tr.style.borderBottom = '1px solid #F1F5F9';
+          tr.innerHTML = `
+            <td style="padding: 8px;"><strong>${escapeHTML(h.caller)}</strong></td>
+            <td style="padding: 8px; white-space:nowrap;">${escapeHTML(h.date)}</td>
+            <td style="padding: 8px;"><span style="color: #0A3981; font-weight: 600;">${escapeHTML(h.disp)}</span></td>
+            <td style="padding: 8px; color: #334155;">${escapeHTML(h.notes)}</td>
+          `;
+          histBody.appendChild(tr);
+        });
+      }
+    }
+
+    function confirmBcmSave() {
+      let cases = getMasterCases();
+      let item = cases.find(c => c.loanNo === activeLoanNo);
+      if (item) {
+        item.bcm = "Confirmed by BCM";
+        item.bcmCaseType = document.getElementById('bcm-case-type').value;
+        item.bcmSubType = document.getElementById('bcm-sub-type').value;
+        item.bcmRemarks = document.getElementById('bcm-remarks').value.trim();
+        if (item.status === 'Active') item.stage = 'Stage 1: Intake';
+        saveMasterCases(cases);
+        document.getElementById('bcm-flow-msg').style.display = 'block';
+      }
+    }
+
+    function saveStageItem(stageNo) {
+      const cases = getMasterCases();
+      const item = cases.find(c => c.loanNo === activeLoanNo);
+      if (!item) return;
+
+      if (!item.stageDetails) item.stageDetails = {};
+      if (stageNo === 1) {
+        const stage = {
+          status: document.getElementById('stg1-status').value,
+          date: document.getElementById('stg1-date').value,
+          remarks: document.getElementById('stg1-remarks').value.trim()
+        };
+        stage.verified = stage.status === 'Not Applicable' ||
+          (stage.status === 'Delivered to Customer' && Boolean(stage.date));
+        stage.saved = true;
+        stage.verificationStatus = 'Action Saved';
+        item.stageDetails.stage1 = stage;
+        item.stage = 'Stage 1: Vehicle Delivered Verification';
+      } else if (stageNo === 2) {
+        const stage = {
+          status: document.getElementById('stg2-status').value,
+          utr: document.getElementById('stg2-utr').value.trim(),
+          date: document.getElementById('stg2-date').value
+        };
+        stage.verified = stage.status === 'Yes' && Boolean(stage.utr) && Boolean(stage.date);
+        stage.saved = true;
+        stage.verificationStatus = 'Action Saved';
+        item.stageDetails.stage2 = stage;
+        item.stage = 'Stage 2: Financer Payment';
+      } else if (stageNo === 3) {
+        const stage = {
+          status: document.getElementById('stg3-status').value,
+          ptpDate: document.getElementById('stg3-ptp').value,
+          notes: document.getElementById('stg3-notes').value.trim()
+        };
+        stage.verified = ['Full Received', 'Done By DSA'].includes(stage.status);
+        stage.saved = true;
+        stage.verificationStatus = 'Action Saved';
+        item.stageDetails.stage3 = stage;
+        item.stage = 'Stage 3: Customer Margin Payment';
+      } else {
+        return;
+      }
+
+      saveMasterCases(cases);
+    }
+
+    function executeVahanClosure() {
+      let result = document.getElementById('vahan-api-selector').value;
+      let cases = getMasterCases();
+      let item = cases.find(c => c.loanNo === activeLoanNo);
+      if (item) {
+        if (result === 'CLEAN') {
+          item.status = "Closed";
+          item.discrepancy = false;
+          item.stage = 'Stage 6: Vahan API Closure';
+          item.vahanStatus = 'Clean';
+          alert(`Vahan API Verification Clean! Case ${activeLoanNo} marked as Closed & Updated.`);
+        } else {
+          item.discrepancy = true;
+          item.status = "Flagged";
+          item.stage = 'Stage 6: Vahan API Closure';
+          item.vahanStatus = 'Discrepancy';
+          item.discrepancyType = "API Discrepancy Mismatch";
+          alert(`Discrepancy flagged! Case ${activeLoanNo} routed to Reviewer Screen (Screen 5).`);
+        }
+        saveMasterCases(cases);
+      }
+    }
+
+    function submitCallerFinalComments() {
+      let notes = document.getElementById('caller-final-comments').value;
+      let disp = document.getElementById('final-disposition-select').value;
+      let cases = getMasterCases();
+      let item = cases.find(c => c.loanNo === activeLoanNo);
+      if (item) {
+        if (!item.history) item.history = [];
+        item.history.unshift({
+          caller: "Rahul Sharma (Operator)",
+          date: new Date().toLocaleDateString(),
+          disp: disp,
+          notes: notes,
+          ptpDate: document.getElementById('final-ptp-date').value
+        });
+        item.nextActionDate = document.getElementById('final-ptp-date').value;
+        saveMasterCases(cases);
+        document.getElementById('caller-comment-saved-msg').style.display = 'inline';
+        setTimeout(() => { document.getElementById('caller-comment-saved-msg').style.display = 'none'; }, 3000);
+      }
+    }
+
+    function loadNextCaseInQueue() {
+      const cases = getMasterCases();
+      let currentIndex = cases.findIndex(c => c.loanNo === activeLoanNo);
+      let nextIndex = (currentIndex + 1) % cases.length;
+      switchScreen('screen-4', cases[nextIndex].loanNo);
+    }
+
+    // --- REVIEWER SCREEN RENDERER ---
+    function renderReviewer(loanNo = null) {
+      const cases = getMasterCases();
+      const flaggedCases = cases.filter(c => c.discrepancy);
+      document.getElementById('active-discrepancy-badge-count').innerText = flaggedCases.length;
+      document.getElementById('discrepancy-total-count').innerText = flaggedCases.length;
+
+      let activeReviewItem = flaggedCases.find(c => c.loanNo === loanNo) || flaggedCases[0] || cases[0];
+      if (!activeReviewItem) return;
+      activeLoanNo = activeReviewItem.loanNo;
+
+      document.getElementById('review-active-title').innerHTML = `<i class="fa-solid fa-user-check"></i> Case Under Review: ${escapeHTML(activeReviewItem.loanNo)} (Customer: ${escapeHTML(activeReviewItem.customer)})`;
+      document.getElementById('review-active-discrepancy-tag').innerText = `Discrepancy: ${activeReviewItem.discrepancyType || 'Vahan Mismatch'}`;
+      document.getElementById('rev-product').innerText = `${activeReviewItem.product} - ${activeReviewItem.model}`;
+      document.getElementById('rev-amount').innerText = activeReviewItem.amount;
+      document.getElementById('rev-dsa').innerText = activeReviewItem.source;
+      document.getElementById('rev-branch').innerText = `${activeReviewItem.state} (${activeReviewItem.region})`;
+      document.getElementById('rev-finding-desc').innerHTML = activeReviewItem.finding ? escapeHTML(activeReviewItem.finding) : `Discrepancy detected during automated ministry verification check for ${escapeHTML(activeReviewItem.loanNo)}.`;
+      document.getElementById('rcm-rcu-decision').value = activeReviewItem.rcuDecision || 'INITIATE';
+      document.getElementById('rcm-free-comment').value = activeReviewItem.rcmComment || '';
+
+      // Render table
+      const tbody = document.getElementById('discrepancy-queue-tbody');
+      tbody.innerHTML = '';
+      if (flaggedCases.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:15px;">No active discrepancy cases pending review.</td></tr>`;
+        return;
+      }
+
+      flaggedCases.forEach(item => {
+        let tr = document.createElement('tr');
+        tr.style.background = item.loanNo === activeReviewItem.loanNo ? '#FAF5FF' : '#FFFFFF';
+        tr.innerHTML = `
+          <td><strong style="color: #0066FF;">${escapeHTML(item.loanNo)}</strong></td>
+          <td>${escapeHTML(item.customer)}</td>
+          <td>${escapeHTML(item.product)}</td>
+          <td><strong>${escapeHTML(item.rcm)}</strong></td>
+          <td><span class="badge badge-warning">${escapeHTML(item.discrepancyType || 'Mismatch')}</span></td>
+          <td>${escapeHTML(item.finding || 'Details pending audit')}</td>
+          <td><span class="badge badge-rcu">${escapeHTML(item.rcuStatus || 'Review Pending')}</span></td>
+          <td><button class="btn-action" style="background: var(--rcu-purple); padding: 4px 8px;" onclick="renderReviewer('${escapeHTML(item.loanNo)}')">Review Case</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function submitRcmDecision() {
+      let decision = document.getElementById('rcm-rcu-decision').value;
+      let comment = document.getElementById('rcm-free-comment').value;
+      const cases = getMasterCases();
+      const item = cases.find(c => c.loanNo === activeLoanNo);
+      if (!item) return;
+
+      item.rcuDecision = decision;
+      item.rcmComment = comment.trim();
+      item.rcuStatus = decision === 'NOT_REQUIRED'
+        ? 'Waived'
+        : decision === 'RC Needed Rectification'
+          ? 'Rectification Required'
+          : 'Initiated';
+      if (decision === 'NOT_REQUIRED') {
+        item.discrepancy = false;
+        if (item.status === 'Flagged') item.status = 'Active';
+      }
+      saveMasterCases(cases);
+      document.getElementById('rcm-decision-msg').style.display = 'inline';
+      setTimeout(() => { document.getElementById('rcm-decision-msg').style.display = 'none'; }, 3000);
+    }
+
+    // --- REPORTS MIS RENDERER ---
+    function getMISFilteredCases() {
+      const selRegion = document.getElementById('filter-region')?.value || 'ALL';
+      const selState = document.getElementById('filter-state')?.value || 'ALL';
+      const selRCM = document.getElementById('filter-rcm')?.value || 'ALL';
+      return getMasterCases().filter(item =>
+        (selRegion === 'ALL' || (item.region || 'Unassigned') === selRegion) &&
+        (selState === 'ALL' || (item.state || 'Unassigned') === selState) &&
+        (selRCM === 'ALL' || (item.rcm || 'Unassigned') === selRCM)
+      );
+    }
+
+    function getMISSummaryRows(cases) {
+      const groups = new Map();
+      cases.forEach(item => {
+        const group = {
+          region: item.region || 'Unassigned',
+          state: item.state || 'Unassigned',
+          rcm: item.rcm || 'Unassigned'
+        };
+        const key = JSON.stringify(group);
+        if (!groups.has(key)) groups.set(key, { ...group, cases: [] });
+        groups.get(key).cases.push(item);
+      });
+
+      return Array.from(groups.values()).sort((a, b) =>
+          a.region.localeCompare(b.region) ||
+          a.state.localeCompare(b.state) ||
+          a.rcm.localeCompare(b.rcm)
+        );
+    }
+
+    function getMISSummaryValues(row) {
+      const rowCases = row.cases;
+      const total = rowCases.length;
+      const active = rowCases.filter(item => item.status !== 'Closed').length;
+      const closed = rowCases.filter(item => item.status === 'Closed').length;
+      const overdue = rowCases.filter(item => item.overdue).length;
+      const rcuFlagged = rowCases.filter(item => item.discrepancy).length;
+      const clean = rowCases.filter(item => item.status === 'Closed' && !item.discrepancy).length;
+      return {
+        region: row.region,
+        state: row.state,
+        rcm: row.rcm,
+        total,
+        active,
+        closed,
+        overdue,
+        clean,
+        rcuFlagged,
+        completion: total ? ((closed / total) * 100).toFixed(1) : '0.0'
+      };
+    }
+
+    function renderMISReportTable() {
+      const filteredRows = getMISSummaryRows(getMISFilteredCases());
+      const tbody = document.getElementById('mis-matrix-tbody');
+      tbody.innerHTML = '';
+      const totalCount = filteredRows.reduce((sum, row) => sum + row.cases.length, 0);
+      document.getElementById('mis-total-cases').textContent = `${totalCount} Cases Rollup`;
+      document.getElementById('mis-subtitle').textContent =
+        `${totalCount} Total Cases Rollup`;
+
+      if (filteredRows.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; padding:20px;">No cases match the selected filters.</td></tr>';
+      }
+
+      filteredRows.forEach(row => {
+        const values = getMISSummaryValues(row);
+
+        let tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid #E2E8F0';
+        tr.innerHTML = `
+          <td style="padding: 10px 12px;"><strong>${values.region}</strong></td>
+          <td style="padding: 10px 12px;">${values.state}</td>
+          <td style="padding: 10px 12px;"><strong>${values.rcm}</strong></td>
+          <td style="padding: 10px 12px;">${values.total}</td>
+          <td style="padding: 10px 12px;">${values.active}</td>
+          <td style="padding: 10px 12px;">${values.closed}</td>
+          <td style="padding: 10px 12px;"></td>
+          <td style="padding: 10px 12px;">${values.clean}</td>
+          <td style="padding: 10px 12px;"><span class="badge badge-rcu" onclick="switchScreen('screen-5')" style="cursor: pointer; background: #F3E8FF; color: #6B21A8; padding: 2px 6px; border-radius: 4px; font-weight: 600;">${values.rcuFlagged} Flagged</span></td>
+          <td style="padding: 10px 12px;"><strong>${values.completion}%</strong></td>
+        `;
+        const overdueCell = tr.cells[6];
+        const overdueCases = row.cases.filter(item => Boolean(item.overdue));
+        const overdueButton = document.createElement('button');
+        overdueButton.type = 'button';
+        overdueButton.textContent = `${overdueCases.length} Overdue`;
+        overdueButton.setAttribute('aria-label', `View ${overdueCases.length} overdue cases for ${values.state}, ${values.rcm}`);
+        overdueButton.style.cssText = `padding:0; border:0; background:transparent; color:${overdueCases.length ? '#DC2626' : '#64748B'}; font:inherit; font-weight:700; ${overdueCases.length ? 'cursor:pointer; text-decoration:underline;' : 'cursor:default;'}`;
+        overdueButton.disabled = overdueCases.length === 0;
+        if (overdueCases.length) {
+          overdueButton.addEventListener('click', () => openOverdueCasesPopup(
+            overdueCases,
+            `${values.state} — ${values.rcm}`
+          ));
+        }
+        overdueCell.appendChild(overdueButton);
+        tbody.appendChild(tr);
+      });
+    }
+
+    function resetMISFilters() {
+      document.getElementById('filter-region').value = 'ALL';
+      document.getElementById('filter-state').value = 'ALL';
+      document.getElementById('filter-rcm').value = 'ALL';
+      renderMISReportTable();
+    }
+
+    function escapeCSVValue(value) {
+      let text = value == null ? '' : String(value);
+      if (/^[\s]*[=+\-@]/.test(text)) text = `'${text}`;
+      return `"${text.replace(/"/g, '""')}"`;
+    }
+
+    function getMISCaseExportRows(exportType, cases) {
+      const dimension = exportType === 'State-wise'
+        ? 'state'
+        : exportType === 'Region-wise'
+          ? 'region'
+          : 'rcm';
+      const sortedCases = [...cases].sort((a, b) =>
+        String(a[dimension] || 'Unassigned').localeCompare(String(b[dimension] || 'Unassigned')) ||
+        String(a.region || 'Unassigned').localeCompare(String(b.region || 'Unassigned')) ||
+        String(a.state || 'Unassigned').localeCompare(String(b.state || 'Unassigned')) ||
+        String(a.rcm || 'Unassigned').localeCompare(String(b.rcm || 'Unassigned')) ||
+        String(a.loanNo || '').localeCompare(String(b.loanNo || ''))
+      );
+      const headers = [
+        'Region', 'State', 'RCM', 'Loan Number', 'Customer Name', 'Product',
+        'Asset Make & Model', 'Source Segment', 'Status', 'Current Stage',
+        'Overdue', 'BCM Confirmation', 'Stage Verification',
+        'Vahan Status', 'Vahan Discrepancy', 'RCU Decision', 'RCU Status',
+        'RCM Comment', 'Next Action Date'
+      ];
+      const rows = sortedCases.map(item => {
+        const stageMatch = (item.stage || '').match(/^Stage\s*(\d+)/i);
+        const stageVerification = stageMatch
+          ? getStageVerification(item, Number(stageMatch[1]))
+          : null;
+        return [
+          item.region || 'Unassigned',
+          item.state || 'Unassigned',
+          item.rcm || 'Unassigned',
+          item.loanNo,
+          item.customer,
+          item.product,
+          item.model,
+          item.source,
+          item.status,
+          item.stage,
+          item.overdue ? 'Yes' : 'No',
+          item.bcm,
+          stageVerification?.saved ? 'Action Saved' : stageVerification ? 'Action Required' : '',
+          item.vahanStatus,
+          item.discrepancy ? 'Yes' : 'No',
+          item.rcuDecision,
+          item.rcuStatus,
+          item.rcmComment,
+          item.nextActionDate
+        ];
+      });
+      return { headers, rows };
+    }
+
+    function downloadMISCSV(exportType, cases) {
+      const { headers, rows } = getMISCaseExportRows(exportType, cases);
+      const csv = [headers, ...rows].map(row => row.map(escapeCSVValue).join(',')).join('\r\n');
+      const blob = new Blob(['\uFEFF', csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      const fileName = `rc-track-${exportType.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${new Date().toISOString().slice(0, 10)}.csv`;
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function escapeHTML(value) {
+      return String(value == null ? '' : value).replace(/[&<>"']/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[character]);
+    }
+
+    function exportMISPDF() {
+      const cases = getMISFilteredCases();
+      const summaryRows = getMISSummaryRows(cases).map(getMISSummaryValues);
+      const caseExport = getMISCaseExportRows('Region-wise', cases);
+      const reportDate = new Date().toLocaleDateString();
+      const summaryHeaders = [
+        'Region', 'State', 'RCM', 'Total Cases', 'Active Pipeline',
+        'Closed (Vahan Passed)', 'Overdue Cases', 'Vahan Clean',
+        'Vahan Discrepancy (RCU)', 'Completion %'
+      ];
+      const summaryTable = `
+        <h2>Regional &amp; RCM Performance Matrix</h2>
+        <table><thead><tr>${summaryHeaders.map(header => `<th>${escapeHTML(header)}</th>`).join('')}</tr></thead>
+        <tbody>${summaryRows.map(row => `<tr>${[
+          row.region, row.state, row.rcm, row.total, row.active, row.closed,
+          row.overdue, row.clean, row.rcuFlagged, `${row.completion}%`
+        ].map(value => `<td>${escapeHTML(value)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+      const casesTable = `
+        <h2>Case Details (${cases.length} cases)</h2>
+        <table><thead><tr>${caseExport.headers.map(header => `<th>${escapeHTML(header)}</th>`).join('')}</tr></thead>
+        <tbody>${caseExport.rows.map(row => `<tr>${row.map(value => `<td>${escapeHTML(value)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+      const reportHTML = `<!doctype html><html><head><meta charset="utf-8"><title>RC Track MIS Report</title>
+        <style>
+          @page { size: landscape; margin: 12mm; }
+          body { font-family: Arial, sans-serif; color: #172033; font-size: 9px; }
+          h1 { color: #0A3981; font-size: 20px; margin-bottom: 4px; }
+          h2 { color: #0A3981; font-size: 13px; margin: 20px 0 8px; page-break-after: avoid; }
+          p { margin: 0 0 12px; color: #475569; }
+          table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+          th, td { border: 1px solid #CBD5E1; padding: 4px; text-align: left; overflow-wrap: anywhere; }
+          th { background: #EAF0F8; }
+          tr { page-break-inside: avoid; }
+        <\/style></head><body>
+        <h1>PAN-India Regional Credit Managers (RCMs) Performance MIS</h1>
+        <p>Generated ${escapeHTML(reportDate)} • ${cases.length} cases • Current report filters applied</p>
+        ${summaryTable}${casesTable}
+        <\/body><\/html>`;
+      const reportWindow = window.open('', '_blank');
+      if (reportWindow) {
+        reportWindow.document.write(reportHTML);
+        reportWindow.document.close();
+        reportWindow.focus();
+        reportWindow.print();
+        return;
+      }
+
+      const printFrame = document.createElement('iframe');
+      printFrame.title = 'Printable RC Track MIS report';
+      printFrame.style.cssText = 'position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;';
+      document.body.appendChild(printFrame);
+      const frameWindow = printFrame.contentWindow;
+      frameWindow.document.open();
+      frameWindow.document.write(reportHTML);
+      frameWindow.document.close();
+      frameWindow.onafterprint = () => printFrame.remove();
+      setTimeout(() => {
+        frameWindow.focus();
+        frameWindow.print();
+      }, 0);
+    }
+
+    function triggerFilteredDownload(exportType) {
+      if (exportType === 'PDF Comprehensive') {
+        exportMISPDF();
+        return;
+      }
+      if (!['State-wise', 'Region-wise', 'RCM-wise'].includes(exportType)) {
+        throw new Error(`Unsupported MIS export type: ${exportType}`);
+      }
+      downloadMISCSV(exportType, getMISFilteredCases());
+    }
+
+    // Product Modal Helper
+    function openProductModal(productType) {
+      const modal = document.getElementById('productDetailModal');
+      const title = document.getElementById('modalTitle');
+      const tbody = document.getElementById('modalTableBody');
+      title.innerText = `${productType} Cases Details`;
+      tbody.innerHTML = '';
+
+      let matchingCases = getMasterCases().filter(c => c.product === productType);
+      matchingCases.forEach(item => {
+        let tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="padding: 10px; font-weight: 600;"><a href="#" onclick="switchScreen('screen-4', '${escapeHTML(item.loanNo)}'); closeProductModal(); return false;">${escapeHTML(item.loanNo)}</a></td>
+          <td style="padding: 10px;">${escapeHTML(item.customer)}</td>
+          <td style="padding: 10px;">${escapeHTML(item.product)}</td>
+          <td style="padding: 10px;">${escapeHTML(item.model)}</td>
+          <td style="padding: 10px;">${escapeHTML(item.rcm)}</td>
+          <td style="padding: 10px;">${escapeHTML(item.source)}</td>
+          <td style="padding: 10px;"><span class="badge ${item.bcm.includes('Pending') ? 'badge-warning' : 'badge-verified'}">${escapeHTML(item.bcm)}</span></td>
+          <td style="padding: 10px;">${escapeHTML(item.stage)}</td>
+          <td style="padding: 10px;"><button class="btn-action" onclick="switchScreen('screen-4', '${escapeHTML(item.loanNo)}'); closeProductModal();">Process</button></td>
+        `;
+        appendStageVerificationBadge(tr.cells[7], item);
+        tbody.appendChild(tr);
+      });
+      modal.style.display = 'flex';
+    }
+
+    function closeProductModal() {
+      document.getElementById('productDetailModal').style.display = 'none';
+    }
+
+    function toggleRemarkHistory() {
+      const container = document.getElementById('remark-history-container');
+      const toggleText = document.getElementById('history-toggle-text');
+      if (container.style.display === 'none') {
+        container.style.display = 'block';
+        toggleText.textContent = 'Hide Remark History';
+      } else {
+        container.style.display = 'none';
+        toggleText.textContent = 'Show Remark History';
+      }
+    }
+
+    function renderAllScreens() {
+      renderDashboard();
+      const activeScreen = document.querySelector('.screen-container.active')?.id;
+      if (activeScreen === 'screen-3') renderCasesQueue();
+      if (activeScreen === 'screen-4') renderDisposition(activeLoanNo);
+      if (activeScreen === 'screen-5') renderReviewer(activeLoanNo);
+      if (activeScreen === 'screen-6') renderMISReportTable();
+    }
+
+    // Initialize initial view on load
+    window.onload = function() {
+      renderDashboard();
+    };
+  </script>
+</body>
+</html>

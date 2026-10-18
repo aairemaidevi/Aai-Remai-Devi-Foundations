@@ -41,7 +41,7 @@ export async function POST(request) {
     return Response.json(
       {
         error:
-          "Gmail is not configured on the running server. Set GMAIL_USER and GMAIL_APP_PASSWORD in .env.local, then restart the Next.js server.",
+          "Your volunteer registration is saved, but its confirmation email could not be sent because email is not configured for this deployment. To enable email, add GMAIL_USER and GMAIL_APP_PASSWORD under your Vercel project's Settings > Environment Variables, then redeploy. This does not affect saving registrations.",
       },
       { status: 503 },
     );

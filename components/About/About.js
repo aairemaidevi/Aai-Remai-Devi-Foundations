@@ -42,7 +42,7 @@ export default function About() {
         const { error } = await supabase.from("volunteer_submissions").insert(volunteer);
 
         if (error) throw error;
-        let confirmationMessage = "Your volunteer registration has been saved.";
+        let confirmationMessage = "Your volunteer registration has been saved to our records.";
 
         try {
           const emailResponse = await fetch("/api/volunteer-confirmation", {
