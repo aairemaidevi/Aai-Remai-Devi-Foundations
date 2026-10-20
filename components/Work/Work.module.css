@@ -213,6 +213,14 @@
   line-height: 1.08;
 }
 
+.storySubtitle {
+  margin-top: 10px;
+  color: var(--leaf-deep);
+  font-family: var(--font-devanagari);
+  font-size: 17px;
+  font-weight: 600;
+}
+
 .storyIntro,
 .stageCopy > p:last-child,
 .storyClosing > p {

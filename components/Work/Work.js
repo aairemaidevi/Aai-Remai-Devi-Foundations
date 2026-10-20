@@ -81,6 +81,12 @@ const PILLARS = [
     ],
   },
   {
+    title: "Water Conservation Initiative",
+    desc: "“Stop the Water, Store the Water” — village awareness and a permanent cement check dam to conserve water and recharge groundwater.",
+    image: getSiteImageUrl("OUR WORK/WATER/Water 1.jpeg"),
+    project: "water-conservation",
+  },
+  {
     title: "Health",
     desc: "Discover better healthcare access through medical camps, screenings, nutrition support, and referrals for every family.",
     image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1000&q=85",
@@ -140,6 +146,41 @@ const ROAD_STAGES = [
       "The paving and RCC culvert work are complete, giving the village a stronger, more reliable road to the temple.",
     image: "/road-after.png",
     imageAlt: "The completed paved road and RCC culvert near the temple",
+  },
+];
+
+const WATER_STAGES = [
+  {
+    label: "Awareness",
+    title: "Preparing for the threat of drought",
+    description:
+      "With rainfall significantly lower than usual, the threat of severe drought in the coming months is increasingly evident. We conducted a village awareness initiative on water conservation and responsible water use.",
+    image: getSiteImageUrl("OUR WORK/WATER/Water 1.jpeg"),
+    imageAlt: "Water conservation initiative documented in the village, photo 1",
+  },
+  {
+    label: "Responsible water use",
+    title: "Planning together to protect water",
+    description:
+      "Villagers were guided on using water judiciously, following government guidelines, adopting conservation practices and collectively planning measures to protect the village from drought conditions.",
+    image: getSiteImageUrl("OUR WORK/WATER/Water 2.jpeg"),
+    imageAlt: "Water conservation initiative documented in the village, photo 2",
+  },
+  {
+    label: "Practical action",
+    title: "A permanent cement check dam",
+    description:
+      "As a practical step towards water conservation, a permanent cement check dam was constructed to arrest the flow of water and facilitate water storage.",
+    image: getSiteImageUrl("OUR WORK/WATER/Water 3.jpeg"),
+    imageAlt: "Water conservation initiative documented in the village, photo 3",
+  },
+  {
+    label: "A water-secure future",
+    title: "Supporting groundwater recharge",
+    description:
+      "The check dam also helps improve groundwater recharge. This initiative reflects our commitment to sustainable water management and meaningful community participation.",
+    image: getSiteImageUrl("OUR WORK/WATER/Watrer 4.jpeg"),
+    imageAlt: "Water conservation initiative documented in the village, photo 4",
   },
 ];
 
@@ -236,7 +277,7 @@ export default function Work() {
         <div className={styles.story}>
           <div className={styles.storyHeader}>
             <div>
-              {selectedProject?.project ? (
+              {selectedProject?.project === "road-development" ? (
                 <>
                   <p className={styles.storyEyebrow}>Our work · Rural development</p>
                   <h2 className={styles.storyTitle} id="project-story-title">
@@ -248,6 +289,27 @@ export default function Work() {
                     remained pending for 18 years. Aai Remai Devi Educational and
                     Social Institution (Regd.) completed the work through CSR
                     funding.
+                  </p>
+                </>
+              ) : selectedProject?.project === "water-conservation" ? (
+                <>
+                  <p className={styles.storyEyebrow}>Our work · Water conservation</p>
+                  <h2 className={styles.storyTitle} id="project-story-title">
+                    Stop the Water, Store the Water
+                  </h2>
+                  <p className={styles.storySubtitle}>Paani Adva, Paani Jirva</p>
+                  <p className={styles.storyIntro}>
+                    With rainfall significantly lower than usual this year, the
+                    threat of severe drought in the coming months is becoming
+                    increasingly evident. In response, we conducted a village
+                    awareness initiative to highlight the importance of water
+                    conservation and responsible water use.
+                  </p>
+                  <p className={styles.storyIntro}>
+                    Villagers were guided on using water judiciously, following
+                    government guidelines, adopting conservation practices and
+                    collectively planning measures to protect the village from
+                    drought conditions.
                   </p>
                 </>
               ) : selectedProject ? (
@@ -269,7 +331,7 @@ export default function Work() {
               <X size={21} />
             </button>
           </div>
-          {selectedProject?.project ? (
+          {selectedProject?.project === "road-development" ? (
             <>
               <div className={styles.timeline}>
                 {ROAD_STAGES.map((stage) => (
@@ -295,6 +357,35 @@ export default function Work() {
                   the beginning of our commitment to the development, welfare and
                   progress of our community, and we look forward to many more
                   meaningful efforts in the future.
+                </p>
+              </div>
+            </>
+          ) : selectedProject?.project === "water-conservation" ? (
+            <>
+              <div className={styles.timeline}>
+                {WATER_STAGES.map((stage) => (
+                  <article className={styles.timelineRow} key={stage.label}>
+                    <div className={styles.stagePhoto}>
+                      <img src={stage.image} alt={stage.imageAlt} />
+                      <span className={styles.stageBadge}>{stage.label}</span>
+                    </div>
+                    <div className={styles.stageCopy}>
+                      <p className={styles.stageEyebrow}>Water conservation</p>
+                      <h3>{stage.title}</h3>
+                      <p>{stage.description}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+              <div className={styles.storyClosing}>
+                <h3>Our message is simple</h3>
+                <p>
+                  Every drop of water saved today is a step towards securing
+                  tomorrow.
+                </p>
+                <p>
+                  “Stop the Water, Store the Water — Let Us Make Every Village
+                  Water-Secure.”
                 </p>
               </div>
             </>
