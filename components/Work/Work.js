@@ -8,37 +8,9 @@ import styles from "./Work.module.css";
 const PILLARS = [
   {
     title: "Economic Development",
-    desc: "Empowering rural youth and farmers with skills training, dairy farming, poultry, and farm-based livelihood programs.",
-    image: "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?auto=format&fit=crop&w=1000&q=85",
-    stages: [
-      {
-        label: "Before",
-        title: "Limited livelihood opportunities",
-        description:
-          "Rural families may have limited access to local employment, practical training and dependable ways to earn an income.",
-        image:
-          "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=85",
-        imageAlt: "Rural agricultural fields before livelihood initiatives",
-      },
-      {
-        label: "In progress",
-        title: "Building skills and opportunity",
-        description:
-          "Training and livelihood initiatives can help young people and farmers explore skills in agriculture, dairy farming, poultry and related work.",
-        image:
-          "https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=1000&q=85",
-        imageAlt: "Farmland and agricultural work as livelihood initiatives develop",
-      },
-      {
-        label: "After",
-        title: "Working toward sustainable livelihoods",
-        description:
-          "With stronger skills and access to livelihood opportunities, families can work toward more resilient incomes and a stronger local economy.",
-        image:
-          "https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1000&q=85",
-        imageAlt: "Harvested crops representing sustainable rural livelihoods",
-      },
-    ],
+    desc: "Building rural livelihoods through practical skills, agriculture, dairy farming, poultry and locally rooted opportunities.",
+    image: getSiteImageUrl("OUR WORK/ECONOMIC & DEVELOPMENT/Economic 1.jpeg"),
+    project: "economic-development",
   },
   {
     title: "Rural Development",
@@ -150,6 +122,41 @@ const WATER_STAGES = [
   },
 ];
 
+const ECONOMIC_STAGES = [
+  {
+    label: "Skills",
+    title: "Practical skills for new opportunities",
+    description:
+      "Skills training can help rural youth and families build confidence, strengthen their abilities and prepare for meaningful livelihood opportunities.",
+    image: getSiteImageUrl("OUR WORK/ECONOMIC & DEVELOPMENT/Economic 1.jpeg"),
+    imageAlt: "Economic development initiative, photograph 1",
+  },
+  {
+    label: "Agriculture",
+    title: "Growing from local strengths",
+    description:
+      "Agriculture and farm-based programs support livelihoods rooted in local knowledge and resources, while helping farmers explore ways to strengthen their work.",
+    image: getSiteImageUrl("OUR WORK/ECONOMIC & DEVELOPMENT/Economic 2.jpeg"),
+    imageAlt: "Economic development initiative, photograph 2",
+  },
+  {
+    label: "Livelihoods",
+    title: "Supporting dairy and poultry farming",
+    description:
+      "Dairy farming and poultry can create additional livelihood pathways for rural households and complement other sources of income.",
+    image: getSiteImageUrl("OUR WORK/ECONOMIC & DEVELOPMENT/Economic 3.jpeg"),
+    imageAlt: "Economic development initiative, photograph 3",
+  },
+  {
+    label: "Resilience",
+    title: "Building a stronger local economy",
+    description:
+      "By connecting practical skills with farm-based opportunities, communities can work towards more diverse, dependable livelihoods and long-term economic resilience.",
+    image: getSiteImageUrl("OUR WORK/ECONOMIC & DEVELOPMENT/Economic 4.jpeg"),
+    imageAlt: "Economic development initiative, photograph 4",
+  },
+];
+
 export default function Work() {
   const [activeIndex, setActiveIndex] = useState(PILLARS.length);
   const [isPaused, setIsPaused] = useState(false);
@@ -243,7 +250,27 @@ export default function Work() {
         <div className={styles.story}>
           <div className={styles.storyHeader}>
             <div>
-              {selectedProject?.project === "road-development" ? (
+              {selectedProject?.project === "economic-development" ? (
+                <>
+                  <p className={styles.storyEyebrow}>Our work · Economic development</p>
+                  <h2 className={styles.storyTitle} id="project-story-title">
+                    Building skills. Strengthening livelihoods.
+                  </h2>
+                  <p className={styles.storyIntro}>
+                    Economic development is about helping people build the
+                    skills and opportunities to shape a more secure future.
+                    Our work focuses on rural youth and farmers, with
+                    livelihood programs grounded in the strengths of village
+                    life.
+                  </p>
+                  <p className={styles.storyIntro}>
+                    From practical skills training to agriculture, dairy
+                    farming, poultry and other farm-based opportunities, we
+                    support pathways that can help families diversify their
+                    livelihoods and strengthen the local economy.
+                  </p>
+                </>
+              ) : selectedProject?.project === "road-development" ? (
                 <>
                   <p className={styles.storyEyebrow}>Our work · Rural development</p>
                   <h2 className={styles.storyTitle} id="project-story-title">
@@ -297,7 +324,33 @@ export default function Work() {
               <X size={21} />
             </button>
           </div>
-          {selectedProject?.project === "road-development" ? (
+          {selectedProject?.project === "economic-development" ? (
+            <>
+              <div className={styles.timeline}>
+                {ECONOMIC_STAGES.map((stage) => (
+                  <article className={styles.timelineRow} key={stage.label}>
+                    <div className={styles.stagePhoto}>
+                      <img src={stage.image} alt={stage.imageAlt} />
+                      <span className={styles.stageBadge}>{stage.label}</span>
+                    </div>
+                    <div className={styles.stageCopy}>
+                      <p className={styles.stageEyebrow}>Economic development</p>
+                      <h3>{stage.title}</h3>
+                      <p>{stage.description}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+              <div className={styles.storyClosing}>
+                <h3>Opportunity grows when communities grow together.</h3>
+                <p>
+                  We are committed to supporting skills, livelihoods and
+                  community-led economic progress—so rural families can build
+                  on their strengths and look ahead with confidence.
+                </p>
+              </div>
+            </>
+          ) : selectedProject?.project === "road-development" ? (
             <>
               <div className={styles.timeline}>
                 {ROAD_STAGES.map((stage) => (
