@@ -40,8 +40,7 @@ export async function POST(request) {
     console.error("Gmail SMTP is not configured for volunteer confirmations.");
     return Response.json(
       {
-        error:
-          "Your volunteer registration is saved, but its confirmation email could not be sent because email is not configured for this deployment. To enable email, add GMAIL_USER and GMAIL_APP_PASSWORD under your Vercel project's Settings > Environment Variables, then redeploy. This does not affect saving registrations.",
+        error: "Confirmation email is not configured for this deployment.",
       },
       { status: 503 },
     );

@@ -42,7 +42,6 @@ export default function About() {
         const { error } = await supabase.from("volunteer_submissions").insert(volunteer);
 
         if (error) throw error;
-        let confirmationMessage = "Your volunteer registration has been saved to our records.";
 
         try {
           const emailResponse = await fetch("/api/volunteer-confirmation", {
@@ -56,18 +55,15 @@ export default function About() {
           const emailResult = await emailResponse.json().catch(() => ({}));
 
           if (!emailResponse.ok) {
-            confirmationMessage += ` ${emailResult.error || "We could not send the confirmation email right now."}`;
-          } else {
-            confirmationMessage += " A confirmation email has been sent to your inbox.";
+            console.error("Volunteer confirmation email was not sent:", emailResult.error);
           }
         } catch (emailError) {
           console.error("Could not send the volunteer confirmation email:", emailError);
-          confirmationMessage += " We could not send the confirmation email right now.";
         }
 
         setSubmission({
           type: "success",
-          message: `Thank you, ${volunteer.name}. ${confirmationMessage}`,
+          message: `Thank you, ${volunteer.name}, for being part of Aai Remai Devi Education And Social Foundation. Your volunteer registration has been received.`,
         });
       } else {
         const customAmount = String(formData.get("customAmount") || "").trim();
