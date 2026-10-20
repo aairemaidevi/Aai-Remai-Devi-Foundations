@@ -47,40 +47,6 @@ const PILLARS = [
     project: "road-development",
   },
   {
-    title: "Water and Sanitation",
-    desc: "Providing 360-degree clean drinking water taps and household toilets to eliminate open defecation and water scarcity across rural Maharashtra.",
-    image: "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=1000&q=85",
-    stages: [
-      {
-        label: "Before",
-        title: "Everyday water and sanitation needs",
-        description:
-          "Limited access to clean water and household sanitation can make daily routines harder and affect community health.",
-        image:
-          "https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1000&q=85",
-        imageAlt: "Water source representing community water and sanitation needs",
-      },
-      {
-        label: "In progress",
-        title: "Improving access and awareness",
-        description:
-          "Water access and sanitation initiatives focus on practical infrastructure and everyday habits that support healthier communities.",
-        image:
-          "https://images.unsplash.com/photo-1527100673774-cce25eafaf7f?auto=format&fit=crop&w=1000&q=85",
-        imageAlt: "Water infrastructure as access improvements are underway",
-      },
-      {
-        label: "After",
-        title: "A healthier everyday environment",
-        description:
-          "Reliable clean water and household sanitation can help families build healthier routines and a cleaner living environment.",
-        image:
-          "https://images.unsplash.com/photo-1530053969600-caed2596d242?auto=format&fit=crop&w=1000&q=85",
-        imageAlt: "Clean water representing a healthier community environment",
-      },
-    ],
-  },
-  {
     title: "Water Conservation Initiative",
     desc: "“Stop the Water, Store the Water” — village awareness and a permanent cement check dam to conserve water and recharge groundwater.",
     image: getSiteImageUrl("OUR WORK/WATER/Water 1.jpeg"),
